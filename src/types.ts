@@ -3,8 +3,8 @@ export interface User {
 }
 
 export interface Review {
-    id: string;
     author: User;
+    course: string;
     rating: number;
     difficulty: number;
     amountLearned: number;
