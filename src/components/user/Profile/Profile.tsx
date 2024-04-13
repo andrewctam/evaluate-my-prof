@@ -3,7 +3,7 @@ import Layout from "../../layout/Layout";
 import { useContext } from "react";
 import Review from "../../home/Review/Review";
 import "./Profile.scss";
-import { ReviewContext } from "../../types/context";
+import { ReviewContext } from "../../../types/context";
 
 export default function Profile() {
   const reviewContext = useContext(ReviewContext);

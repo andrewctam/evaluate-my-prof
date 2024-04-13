@@ -1,9 +1,9 @@
 import { useContext, useState } from "react";
 
 import "./ReviewInput.scss";
-import { Review } from "../../types/review-types";
-import { User } from "../../types/user-types";
-import { UserContext } from "../../types/context";
+import { Review } from "../../../types/review-types";
+import { User } from "../../../types/user-types";
+import { UserContext } from "../../../types/context";
 
 interface ReviewInputProps {
   addReview: (review: Review) => void;

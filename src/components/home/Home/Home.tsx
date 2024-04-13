@@ -1,10 +1,10 @@
 import { useContext } from "react";
 import "./Home.scss";
-import { ReviewActionType, Review as ReviewType } from "../../types/review-types";
+import { ReviewActionType, Review as ReviewType } from "../../../types/review-types";
 import Review from "../Review/Review";
 import ReviewInput from "../ReviewInput/ReviewInput";
 import Layout from "../../layout/Layout";
-import { ReviewContext, ReviewDispatchContext, UserContext } from "../../types/context";
+import { ReviewContext, ReviewDispatchContext, UserContext } from "../../../types/context";
 
 export default function Home() {
   const userState = useContext(UserContext);

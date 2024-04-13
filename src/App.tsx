@@ -1,8 +1,8 @@
 import { useEffect, useReducer } from "react";
 import "./App.scss";
-import Home from "./home/Home/Home";
+import Home from "./components/home/Home/Home";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Profile from "./user/Profile/Profile";
+import Profile from "./components/user/Profile/Profile";
 import { initialReviewState, initialUserState } from "./types/initial-states";
 import {
   ReviewContext,

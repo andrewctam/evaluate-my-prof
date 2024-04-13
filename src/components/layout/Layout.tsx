@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import "./Layout.scss";
 import Login from "../user/Login/Login";
 import { Link } from "react-router-dom";
-import { UserContext } from "../types/context";
+import { UserContext } from "../../types/context";
 
 interface LayoutProps {
   children?: React.ReactNode;
