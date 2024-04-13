@@ -9,14 +9,20 @@ export default function Feed() {
 
   const addReview = (newReview: ReviewType) => {
     setReviews([...reviews, newReview]);
-  }
+  };
+
+  const vote = (i: number, change: number) => {
+    const newReviews = [...reviews];
+    newReviews[i].votes += change;
+    setReviews(newReviews);
+  };
 
   return (
-    <div className = "feed">
+    <div className="feed">
       <ReviewInput addReview={addReview} />
 
-      {reviews.map((r) => (
-        <Review review={r} />
+      {reviews.map((review, i) => (
+        <Review review={review} vote={(change: number) => vote(i, change)} />
       ))}
     </div>
   );

@@ -11,4 +11,5 @@ export interface Review {
     lectureQuality: number;
     hrsPerWeek: number;
     text: string;
+    votes: number;
 }

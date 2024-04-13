@@ -10,9 +10,25 @@
         color: blue;
         font-weight: bold;
         cursor: pointer;
-        
+    }
+
+    .reviewBody {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .vote {
+        text-align: center;
+    }
+    .arrow {
+        cursor: pointer;
+        user-select: none;
     }
 }
+
 .boxes {
     display: flex;
     justify-content: center;
@@ -37,4 +53,15 @@
     .name {
         font-weight: bold;
     }
+}
+
+.body {
+    margin-top: 40px;
+}
+
+.commentBox {
+    width: 75%;
+    height: 100px;
+    flex-direction: column;
+    gap: 10px;
 }

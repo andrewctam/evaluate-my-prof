@@ -29,7 +29,8 @@ export default function ReviewInput({ addReview }: ReviewInputProps) {
             lectureQuality,
             hrsPerWeek,
             text,
-            course
+            course,
+            votes: 0
         });
 
         setRating(3);
