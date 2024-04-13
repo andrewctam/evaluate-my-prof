@@ -2,6 +2,11 @@ export interface User {
     name: string;
 }
 
+export interface Comment {
+    poster: User;
+    text: string
+}
+
 export interface Review {
     author: User;
     course: string;
@@ -12,4 +17,5 @@ export interface Review {
     hrsPerWeek: number;
     text: string;
     votes: number;
+    comments: Comment[];
 }

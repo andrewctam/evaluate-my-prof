@@ -30,7 +30,8 @@ export default function ReviewInput({ addReview }: ReviewInputProps) {
             hrsPerWeek,
             text,
             course,
-            votes: 0
+            votes: 0,
+            comments: []
         });
 
         setRating(3);

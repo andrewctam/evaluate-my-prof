@@ -4,9 +4,11 @@
     margin-top: 10px;
     margin-bottom: 10px;
     padding: 20px;
+    padding-bottom: 40px;
     font-size: 20px;
+    position: relative;
 
-    .author {
+    .username {
         color: blue;
         font-weight: bold;
         cursor: pointer;
@@ -55,13 +57,27 @@
     }
 }
 
-.body {
-    margin-top: 40px;
+.addComment {
+    position: absolute;
+    bottom: 2px;
+    right: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.addComment:hover {
+    color: blue;
 }
 
 .commentBox {
-    width: 75%;
+    width: 95%;
     height: 100px;
-    flex-direction: column;
-    gap: 10px;
+    margin-top: 30px;
+}
+
+.comment {
+    background-color: rgb(181, 197, 197);
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 16px;
 }
