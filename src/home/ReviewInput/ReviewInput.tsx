@@ -54,16 +54,16 @@ export default function ReviewInput({ addReview }: ReviewInputProps) {
 
   return (
     <div className="reviewInput">
-      <div>
+      <div className = "">
         <div>
           <label htmlFor="courseselect">Course:</label>
             <select
+                id="courseselect"
                 value={course}
                 onChange={(e) => setCourse(e.target.value)}
-                id="courseselect"
             >
-                {courses.map((course) => (
-                    <option value={course}>{course}</option>
+                {courses.map((course, i) => (
+                    <option value={course} key={i}>{course}</option>
                 ))}
             </select>
         </div>
@@ -121,6 +121,7 @@ function InputSlider({
     <div>
       {name}
       <input
+        className="slider"
         type="range"
         min={min}
         max={max}

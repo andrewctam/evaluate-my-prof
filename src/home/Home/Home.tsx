@@ -29,8 +29,8 @@ export default function Home() {
         <h1>Professor Bob from Stony Brook University</h1>
         <ReviewInput addReview={addReview} />
 
-        {reviewState.reviews.map(review => (
-          <Review review={review} />
+        {reviewState.reviews.map((review, i) => (
+          <Review review={review} key={i} />
         ))}
       </div>
     </Layout>

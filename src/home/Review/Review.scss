@@ -1,12 +1,14 @@
 
 .review {
     background-color: rgb(212, 231, 231);
+    max-width: 80%;
     margin-top: 10px;
     margin-bottom: 10px;
     padding: 20px;
     padding-bottom: 40px;
     font-size: 20px;
     position: relative;
+    overflow-x: wrap;
 
     .username {
         color: blue;
@@ -14,16 +16,17 @@
         cursor: pointer;
     }
 
-    .reviewBody {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        gap: 20px;
+    .reviewText {
+        width: 100%;
+        word-break: break-word;
+        text-wrap: wrap;
     }
 
     .vote {
         text-align: center;
+        position: absolute;
+        left: 25px;
+        top: 50px;
     }
     .arrow {
         cursor: pointer;
@@ -36,26 +39,28 @@
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
+    margin-left: 50px;
+
+    .box {
+        background-color: rgb(180, 203, 223);
+        padding: 10px;
+        margin: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        display: block;
+        font-size: 18px;
+
+        div {
+            text-align: center;
+        }
+
+        .name {
+            font-weight: bold;
+        }
+    }
 }
 
-.box {
-    background-color: rgb(180, 203, 223);
-    padding: 10px;
-    margin: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    display: block;
-    font-size: 18px;
-
-    div {
-        text-align: center;
-    }
-
-    .name {
-        font-weight: bold;
-    }
-}
 
 .addComment {
     position: absolute;

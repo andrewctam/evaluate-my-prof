@@ -56,6 +56,16 @@ export default function Review({ review }: ReviewProps) {
 
   return (
     <div className="review">
+      <div className="vote">
+        <div className="arrow" onClick={() => vote(1)}>
+          ▲
+        </div>
+        <div>{review.votes}</div>
+        <div className="arrow" onClick={() => vote(-1)}>
+          ▼
+        </div>
+      </div>
+
       <div>
         <Link to={`/profile/${review.author.name}`}>
           <span className="username">{review.author.name}</span>
@@ -64,28 +74,15 @@ export default function Review({ review }: ReviewProps) {
         <span className="course">{review.course}</span>
       </div>
 
-      <div className="reviewBody">
-        <div className="vote">
-          <div className="arrow" onClick={() => vote(1)}>
-            ▲
-          </div>
-          <div>{review.votes}</div>
-          <div className="arrow" onClick={() => vote(-1)}>
-            ▼
-          </div>
-        </div>
-        <div>
-          <div className="boxes">
-            <Box name="Rating" value={review.rating + "/5"} />
-            <Box name="Difficulty" value={review.difficulty + "/5"} />
-            <Box name="Amount Learned" value={review.amountLearned + "/5"} />
-            <Box name="Lecture Quality" value={review.lectureQuality + "/5"} />
-            <Box name="Hours Per Week" value={review.hrsPerWeek.toString()} />
-          </div>
-
-          <div className="box">{review.text}</div>
-        </div>
+      <div className="boxes">
+        <Box name="Rating" value={review.rating + "/5"} />
+        <Box name="Difficulty" value={review.difficulty + "/5"} />
+        <Box name="Amount Learned" value={review.amountLearned + "/5"} />
+        <Box name="Lecture Quality" value={review.lectureQuality + "/5"} />
+        <Box name="Hours Per Week" value={review.hrsPerWeek.toString()} />
       </div>
+
+      <div className="reviewText">{review.text}</div>
 
       {review.comments.map((comment, i) => (
         <Comment key={i} comment={comment} />

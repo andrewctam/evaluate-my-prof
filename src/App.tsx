@@ -59,7 +59,7 @@ export default function App() {
         const review = {
           ...payload,
           id: state.reviews.length,
-        }
+        };
         return { reviews: [...state.reviews, review] };
       case ReviewActionType.ADD_COMMENT:
         const { id, comment } = payload;
@@ -74,7 +74,9 @@ export default function App() {
       case ReviewActionType.VOTE:
         const { id: voteId, change } = payload;
         const voteReviews = [...state.reviews];
-        const voteIndex = voteReviews.findIndex((review) => review.id === voteId);
+        const voteIndex = voteReviews.findIndex(
+          (review) => review.id === voteId
+        );
         if (voteIndex === -1) {
           console.log("Review not found");
           return state;
@@ -85,7 +87,10 @@ export default function App() {
         return state;
     }
   };
-  const [reviewState, reviewDispatch] = useReducer(reviewReducer, initialReviewState);
+  const [reviewState, reviewDispatch] = useReducer(
+    reviewReducer,
+    initialReviewState
+  );
 
   return (
     <UserContext.Provider value={userState}>
