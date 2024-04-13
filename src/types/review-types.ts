@@ -32,6 +32,3 @@ export type ReviewAction =
 export interface ReviewState {
     reviews: Review[];
 }
-export const initialReviewState: ReviewState = {  
-    reviews: [],
-};

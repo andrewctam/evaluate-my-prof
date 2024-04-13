@@ -1,8 +1,8 @@
 import { useContext, useState } from "react";
 import "./Layout.scss";
-import { UserContext } from "../App";
 import Login from "../user/Login/Login";
 import { Link } from "react-router-dom";
+import { UserContext } from "../types/context";
 
 interface LayoutProps {
   children?: React.ReactNode;

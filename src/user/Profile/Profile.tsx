@@ -1,9 +1,9 @@
 import { useParams } from "react-router-dom";
 import Layout from "../../layout/Layout";
 import { useContext } from "react";
-import { ReviewContext } from "../../App";
 import Review from "../../home/Review/Review";
 import "./Profile.scss";
+import { ReviewContext } from "../../types/context";
 
 export default function Profile() {
   const reviewContext = useContext(ReviewContext);

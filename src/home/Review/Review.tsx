@@ -6,8 +6,8 @@ import {
   ReviewActionType,
   Review as ReviewType,
 } from "../../types/review-types";
-import { ReviewDispatchContext, UserContext } from "../../App";
 import { Link } from "react-router-dom";
+import { ReviewDispatchContext, UserContext } from "../../types/context";
 
 interface ReviewProps {
   review: ReviewType;

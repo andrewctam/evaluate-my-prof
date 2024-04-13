@@ -1,8 +1,8 @@
 import { useContext, useState } from "react";
 import "./Login.scss";
-import { UserDispatchContext, UserContext } from "../../App";
 import { UserActionType } from "../../types/user-types";
 import { names, uniqueNamesGenerator } from "unique-names-generator";
+import { UserContext, UserDispatchContext } from "../../types/context";
 
 export default function Login() {
   const userState = useContext(UserContext);
