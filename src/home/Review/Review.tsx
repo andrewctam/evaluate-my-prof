@@ -1,8 +1,13 @@
-import {  useContext, useState } from "react";
+import { useContext, useState } from "react";
 
 import "./Review.scss";
-import { ReviewActionType, Review as ReviewType } from "../../types";
+import {
+  Comment as CommentType,
+  ReviewActionType,
+  Review as ReviewType,
+} from "../../types";
 import { ReviewDispatchContext, UserContext } from "../../App";
+import { Link } from "react-router-dom";
 
 interface ReviewProps {
   review: ReviewType;
@@ -14,7 +19,7 @@ export default function Review({ review }: ReviewProps) {
 
   const [addingComment, setAddingComment] = useState(false);
   const [commentText, setCommentText] = useState("");
-  
+
   const loggedIn = userContext.currentUser;
 
   const addComment = () => {
@@ -42,17 +47,20 @@ export default function Review({ review }: ReviewProps) {
       alert("Not Logged In!");
       return;
     }
-    
+
     reviewDispatch({
       type: ReviewActionType.VOTE,
       payload: { id: review.id, change },
     });
-  }
+  };
 
   return (
     <div className="review">
       <div>
-        <span className="username">{review.author.name}</span>'s review of{" "}
+        <Link to={`/profile/${review.author.name}`}>
+          <span className="username">{review.author.name}</span>
+        </Link>
+        <span>'s review of </span>
         <span className="course">{review.course}</span>
       </div>
 
@@ -80,10 +88,7 @@ export default function Review({ review }: ReviewProps) {
       </div>
 
       {review.comments.map((comment, i) => (
-        <div key={i} className="comment">
-          <div className="username">{comment.poster.name}</div>
-          {comment.text}
-        </div>
+        <Comment key={i} comment={comment} />
       ))}
 
       {addingComment && (
@@ -118,6 +123,22 @@ function Box({ name, value }: BoxProps) {
     <div className="box">
       <div className="name">{name}</div>
       <div>{value}</div>
+    </div>
+  );
+}
+
+interface CommentProps {
+  comment: CommentType;
+}
+function Comment({ comment }: CommentProps) {
+  const name = comment.poster.name;
+  return (
+    <div className="comment">
+      <Link to={`/profile/${name}`}>
+        <div className="username">{name}</div>
+      </Link>
+
+      {comment.text}
     </div>
   );
 }

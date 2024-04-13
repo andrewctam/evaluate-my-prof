@@ -1,9 +1,38 @@
 import { useParams } from "react-router-dom";
 import Layout from "../../layout/Layout";
+import { useContext } from "react";
+import { ReviewContext } from "../../App";
+import Review from "../../home/Review/Review";
+import "./Profile.scss";
 
 export default function Profile() {
-  const params = useParams();
+  const reviewContext = useContext(ReviewContext);
 
-  console.log(params?.username);
-  return <Layout></Layout>;
+  const params = useParams();
+  const username = params?.username;
+  if (!username) {
+    return <Layout>
+      <h1>Profile</h1>
+      <h2>No User Selected</h2>
+    </Layout>;
+  }
+      
+  const reviews = reviewContext.reviews.filter((review) => review.author.name === username);
+  const score = reviews.reduce((acc, review) => acc + review.votes, 0);
+
+  return <Layout>
+    <div className="profile">
+      <h1>{username}</h1>
+      <div className="stats">
+        <div> Total Score: {score} </div>
+        <div> Reviews: {reviews.length} </div>
+      </div>
+      <div className="feed">
+        {reviews.map((review) => (
+          <Review key={review.id} review={review} />
+        ))}
+      </div>
+    </div>
+
+  </Layout>;
 }

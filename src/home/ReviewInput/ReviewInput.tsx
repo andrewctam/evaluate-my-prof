@@ -17,7 +17,7 @@ export default function ReviewInput({ addReview }: ReviewInputProps) {
   const [amountLearned, setAmountLearned] = useState(3);
   const [lectureQuality, setLectureQuality] = useState(3);
   const [hrsPerWeek, setHrsPerWeek] = useState(5);
-  const [course, setCourse] = useState("");
+  const [course, setCourse] = useState(courses[0]);
   const [text, setText] = useState("");
 
   const UserState = useContext(UserContext);
