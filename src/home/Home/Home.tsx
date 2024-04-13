@@ -1,11 +1,11 @@
 import { useContext, useState } from "react";
-import "./Feed.scss";
+import "./Home.scss";
 import { Review as ReviewType, User } from "../../types";
 import Review from "../Review/Review";
 import ReviewInput from "../ReviewInput/ReviewInput";
 import { UserContext } from "../../App";
 
-export default function Feed() {
+export default function Home() {
   const [reviews, setReviews] = useState<ReviewType[]>([]);
 
   const UserState = useContext(UserContext);

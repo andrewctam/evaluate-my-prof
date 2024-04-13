@@ -1,6 +1,6 @@
 import React, { useReducer, useState } from "react";
 import "./App.scss";
-import Feed from "./home/Feed/Feed";
+import Home from "./home/Home/Home";
 import Login from "./user/Login/Login";
 import { UserAction, UserActionType, UserState, initialState } from "./types";
 
@@ -55,7 +55,7 @@ export default function App() {
 
         {showLogin && <Login />}
 
-        <Feed />
+        <Home />
       </DispatchContext.Provider>
     </UserContext.Provider>
   );
