@@ -5,12 +5,15 @@ import {
   ReviewAction,
   ReviewActionType,
   ReviewState,
+  initialReviewState,
+} from "./types/review-types";
+
+import {
   UserAction,
   UserActionType,
   UserState,
-  initialReviewState,
   initialUserState,
-} from "./types";
+} from "./types/user-types";
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Profile from "./user/Profile/Profile";

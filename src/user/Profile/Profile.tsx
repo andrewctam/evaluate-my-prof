@@ -10,12 +10,6 @@ export default function Profile() {
 
   const params = useParams();
   const username = params?.username;
-  if (!username) {
-    return <Layout>
-      <h1>Profile</h1>
-      <h2>No User Selected</h2>
-    </Layout>;
-  }
       
   const reviews = reviewContext.reviews.filter((review) => review.author.name === username);
   const score = reviews.reduce((acc, review) => acc + review.votes, 0);

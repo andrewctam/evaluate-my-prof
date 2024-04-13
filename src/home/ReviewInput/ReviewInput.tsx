@@ -1,15 +1,15 @@
 import { useContext, useState } from "react";
-import { Review, User } from "../../types";
+
 import "./ReviewInput.scss";
 import { UserContext } from "../../App";
+import { Review } from "../../types/review-types";
+import { User } from "../../types/user-types";
 
 interface ReviewInputProps {
   addReview: (review: Review) => void;
 }
 
 const courses = ["CSE 114", "CSE 214", "CSE 320"];
-
-
 
 export default function ReviewInput({ addReview }: ReviewInputProps) {
   const [rating, setRating] = useState(3);

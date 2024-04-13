@@ -5,7 +5,7 @@ import {
   Comment as CommentType,
   ReviewActionType,
   Review as ReviewType,
-} from "../../types";
+} from "../../types/review-types";
 import { ReviewDispatchContext, UserContext } from "../../App";
 import { Link } from "react-router-dom";
 

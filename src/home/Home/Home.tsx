@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import "./Home.scss";
-import { ReviewActionType, Review as ReviewType } from "../../types";
+import { ReviewActionType, Review as ReviewType } from "../../types/review-types";
 import Review from "../Review/Review";
 import ReviewInput from "../ReviewInput/ReviewInput";
 import { ReviewContext, ReviewDispatchContext, UserContext } from "../../App";
