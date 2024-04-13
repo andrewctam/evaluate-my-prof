@@ -31,6 +31,7 @@ export default function ReviewInput({ addReview }: ReviewInputProps) {
     const author: User = { name: UserState.currentUser.name };
 
     addReview({
+      id: 0, // This will be set by the reducer
       author,
       rating,
       difficulty,

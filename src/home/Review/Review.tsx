@@ -1,24 +1,54 @@
-import {  useState } from "react";
+import {  useContext, useState } from "react";
 
 import "./Review.scss";
-import { Review as ReviewType } from "../../types";
+import { ReviewActionType, Review as ReviewType } from "../../types";
+import { ReviewDispatchContext, UserContext } from "../../App";
 
 interface ReviewProps {
   review: ReviewType;
-  vote: (change: number) => void;
-  comment: (text: string) => void;
 }
 
-export default function Review({ review, vote, comment }: ReviewProps) {
+export default function Review({ review }: ReviewProps) {
+  const userContext = useContext(UserContext);
+  const reviewDispatch = useContext(ReviewDispatchContext);
+
   const [addingComment, setAddingComment] = useState(false);
   const [commentText, setCommentText] = useState("");
-
+  
+  const loggedIn = userContext.currentUser;
 
   const addComment = () => {
-    comment(commentText);
+    if (!loggedIn) {
+      alert("Not Logged In!");
+      return;
+    }
+
+    reviewDispatch({
+      type: ReviewActionType.ADD_COMMENT,
+      payload: {
+        id: review.id,
+        comment: {
+          poster: { name: loggedIn.name },
+          text: commentText,
+        },
+      },
+    });
     setCommentText("");
     setAddingComment(false);
   };
+
+  const vote = (change: number) => {
+    if (!loggedIn) {
+      alert("Not Logged In!");
+      return;
+    }
+    
+    reviewDispatch({
+      type: ReviewActionType.VOTE,
+      payload: { id: review.id, change },
+    });
+  }
+
   return (
     <div className="review">
       <div>

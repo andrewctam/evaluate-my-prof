@@ -1,59 +1,38 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import "./Home.scss";
-import { Review as ReviewType, User } from "../../types";
+import { ReviewActionType, Review as ReviewType } from "../../types";
 import Review from "../Review/Review";
 import ReviewInput from "../ReviewInput/ReviewInput";
-import { UserContext } from "../../App";
+import { ReviewContext, ReviewDispatchContext, UserContext } from "../../App";
+import Layout from "../../layout/Layout";
 
 export default function Home() {
-  const [reviews, setReviews] = useState<ReviewType[]>([]);
-
-  const UserState = useContext(UserContext);
+  const userState = useContext(UserContext);
+  const reviewState = useContext(ReviewContext);
+  const reviewDispatch = useContext(ReviewDispatchContext);
 
   const addReview = (newReview: ReviewType) => {
-    setReviews([...reviews, newReview]);
-  };
-
-  const vote = (i: number, change: number) => {
-    if (UserState.currentUser === null) {
+    if (userState.currentUser === null) {
       alert("Not Logged In!");
       return;
     }
 
-    const newReviews = [...reviews];
-    newReviews[i].votes += change;
-    setReviews(newReviews);
-  };
-
-  const addComment = (i: number, text: string) => {
-    if (UserState.currentUser === null) {
-      alert("Not Logged In!");
-      return;
-    }
-
-    const newReviews = [...reviews];
-    const poster: User = { name: UserState.currentUser.name };
-
-    newReviews[i].comments.push({
-      poster,
-      text,
+    reviewDispatch({
+      type: ReviewActionType.ADD_REVIEW,
+      payload: newReview,
     });
-    
-    setReviews(newReviews);
-  }
+  };
 
   return (
-    <div className="feed">
-      <h1>Professor Bob from Stony Brook University</h1>
-      <ReviewInput addReview={addReview} />
+    <Layout>
+      <div className="feed">
+        <h1>Professor Bob from Stony Brook University</h1>
+        <ReviewInput addReview={addReview} />
 
-      {reviews.map((review, i) => (
-        <Review
-          review={review} 
-          vote={(change: number) => vote(i, change)} 
-          comment={(text: string) => addComment(i, text)}
-        />
-      ))}
-    </div>
+        {reviewState.reviews.map(review => (
+          <Review review={review} />
+        ))}
+      </div>
+    </Layout>
   );
 }

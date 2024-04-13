@@ -1,12 +1,12 @@
 import { useContext, useState } from "react";
 import "./Login.scss";
-import { DispatchContext, UserContext } from "../../App";
+import { UserDispatchContext, UserContext } from "../../App";
 import { UserActionType } from "../../types";
 import { names, uniqueNamesGenerator } from "unique-names-generator";
 
 export default function Login() {
   const userState = useContext(UserContext);
-  const dispatch = useContext(DispatchContext);
+  const dispatch = useContext(UserDispatchContext);
 
   const [nameInput, setNameInput] = useState("");
 
