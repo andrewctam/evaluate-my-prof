@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { Review as ReviewType } from "../types";
+import {  useState } from "react";
 
 import "./Review.scss";
+import { Review as ReviewType } from "../../types";
 
 interface ReviewProps {
   review: ReviewType;
@@ -12,6 +12,7 @@ interface ReviewProps {
 export default function Review({ review, vote, comment }: ReviewProps) {
   const [addingComment, setAddingComment] = useState(false);
   const [commentText, setCommentText] = useState("");
+
 
   const addComment = () => {
     comment(commentText);

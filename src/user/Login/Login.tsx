@@ -46,14 +46,16 @@ export default function Login() {
         <button onClick={addUser}>Add User</button>
       </div>
 
-      <div>
-        {loggedIn ? `Logged in as ${loggedIn.name}` : "No user logged in"}
-      </div>
       <div>Click on a user to login as them:</div>
       <div className="userList">
         {userState.users.map((user) => (
           <div key={user.name}>
-            <button onClick={() => switchUser(user.name)}>{user.name}</button>
+            <button
+              className={loggedIn?.name === user.name ? "selected" : ""}
+              onClick={() => switchUser(user.name)}
+            >
+              {user.name}
+            </button>
           </div>
         ))}
       </div>

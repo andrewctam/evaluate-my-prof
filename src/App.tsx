@@ -19,7 +19,7 @@ export default function App() {
         if (state.users.some((user) => user.name === payload.name)) {
           return { ...state, currentUser: payload };
         } else {
-          console.log("User not found")
+          console.log("User not found");
           return state;
         }
       case UserActionType.ADD:
@@ -35,6 +35,7 @@ export default function App() {
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);
+  const loggedIn = state.currentUser;
 
   return (
     <UserContext.Provider value={state}>
@@ -48,7 +49,7 @@ export default function App() {
               setShowLogin(!showLogin);
             }}
           >
-            {showLogin ? "Close" : "Login"}
+            {loggedIn ? `Logged in as ${loggedIn.name}` : "Log in"}
           </span>
         </div>
 
