@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Review, User } from "../types";
+import { Review, User } from "../..//types";
 import "./ReviewInput.scss";
 import { names, uniqueNamesGenerator } from "unique-names-generator";
 

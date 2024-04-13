@@ -1,9 +1,9 @@
 import { useState } from "react";
 import "./Feed.scss";
-import Review from "./Review";
-import { Review as ReviewType, User } from "../types";
-import ReviewInput from "./ReviewInput";
+import { Review as ReviewType, User } from "../../types";
 import { names, uniqueNamesGenerator } from "unique-names-generator";
+import Review from "../Review/Review";
+import ReviewInput from "../ReviewInput/ReviewInput";
 
 export default function Feed() {
   const [reviews, setReviews] = useState<ReviewType[]>([]);
@@ -35,7 +35,7 @@ export default function Feed() {
       <ReviewInput addReview={addReview} />
 
       {reviews.map((review, i) => (
-        <Review 
+        <Review
           review={review} 
           vote={(change: number) => vote(i, change)} 
           comment={(text: string) => addComment(i, text)}

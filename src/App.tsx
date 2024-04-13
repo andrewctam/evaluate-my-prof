@@ -1,6 +1,6 @@
 
 import './App.scss'
-import Feed from './home/Feed'
+import Feed from './home/Feed/Feed'
 
 export default function App() {
   return (

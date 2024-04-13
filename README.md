@@ -1,6 +1,6 @@
 # Evaluate my Professor
 
-A basic frontend for a Rate My Professor clone. I made this for a technical communications class to demo my group's final project.
+A basic frontend for a Rate My Professor clone, used for the CSE 300 final project demo.
 
 ## Running
 ```shell
