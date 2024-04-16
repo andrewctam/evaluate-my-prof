@@ -202,3 +202,4 @@ build/
 *.iml
 .gradle/
 /out/
+application.properties

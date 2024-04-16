@@ -1,1 +1,2 @@
 spring.application.name=emp
+spring.data.mongodb.uri=

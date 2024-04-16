@@ -4,9 +4,12 @@ A Rate My Professor clone, used for my CSE 300 final project demo.
 
 
 ![](demo.png)
+## Installation
+- Navigate to `/backend/src/main/resources/application.properties.template`
+- Add a MongoDB connection URI in spring.data.mongodb.uri
+- Rename this to `application.properties`
 
 ## Running
-
 To run the frontend:
 ```shell
 cd frontend
