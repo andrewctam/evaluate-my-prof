@@ -6,6 +6,7 @@ import "./Profile.scss";
 import { Review as ReviewType } from "../../../types/review-types";
 import { UserContext } from "../../../types/context";
 import axios from "axios";
+import { API_URL } from "../../../types/constants";
 
 export default function Profile() {
   const params = useParams();
@@ -18,7 +19,7 @@ export default function Profile() {
     if (userState.sessionToken === null) {
       return;
     }
-    const url = `${import.meta.env.VITE_API_URL}/reviews/user/${username}`;
+    const url = `${API_URL}/reviews/user/${username}`;
 
     await axios.get(url)
     .then((response) => {

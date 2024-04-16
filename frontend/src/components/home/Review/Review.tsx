@@ -8,6 +8,7 @@ import {
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { UserContext } from "../../../types/context";
+import { API_URL } from "../../../types/constants";
 
 interface ReviewProps {
   review: ReviewType;
@@ -24,7 +25,7 @@ export default function Review({ review, refreshParent }: ReviewProps) {
     if (userState.sessionToken === null) {
       return;
     }
-    const url = `${import.meta.env.VITE_API_URL}/reviews/${action}`;
+    const url = `${API_URL}/reviews/${action}`;
     const body = JSON.stringify({
       authorUsername: userState.username,
       sessionToken: userState.sessionToken,

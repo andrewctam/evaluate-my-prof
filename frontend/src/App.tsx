@@ -3,7 +3,7 @@ import "./App.scss";
 import Home from "./components/home/Home/Home";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Profile from "./components/user/Profile/Profile";
-import { initialUserState } from "./types/initial-states";
+import { initialUserState } from "./types/constants";
 import {
   UserContext,
   UserDispatchContext,

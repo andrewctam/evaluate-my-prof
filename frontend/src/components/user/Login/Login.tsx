@@ -3,6 +3,7 @@ import "./Login.scss";
 import { UserActionType } from "../../../types/user-types";
 import { UserDispatchContext } from "../../../types/context";
 import axios from "axios";
+import { API_URL } from "../../../types/constants";
 
 export default function Login() {
   const userDispatch = useContext(UserDispatchContext);
@@ -39,7 +40,7 @@ export default function Login() {
       return;
     }
     const action = registering ? "register" : "login";
-    const url = `${import.meta.env.VITE_API_URL}/users/${action}`;
+    const url = `${API_URL}/users/${action}`;
 
     const body = JSON.stringify({
       username,

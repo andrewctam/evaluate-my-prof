@@ -3,6 +3,7 @@ import { useContext, useState } from "react";
 import "./ReviewInput.scss";
 import { UserContext } from "../../../types/context";
 import axios from "axios";
+import { API_URL } from "../../../types/constants";
 
 
 const courses = ["CSE 114", "CSE 214", "CSE 320"];
@@ -26,7 +27,7 @@ export default function ReviewInput({ refreshParent }: ReviewInputProps) {
     if (userState.sessionToken === null) {
       return;
     }
-    const url = `${import.meta.env.VITE_API_URL}/reviews/create`;
+    const url = `${API_URL}/reviews/create`;
     const body = JSON.stringify({
       authorUsername: userState.username,
       sessionToken: userState.sessionToken,

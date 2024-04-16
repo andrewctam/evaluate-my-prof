@@ -5,12 +5,13 @@ import Review from "../Review/Review";
 import ReviewInput from "../ReviewInput/ReviewInput";
 import Layout from "../../layout/Layout";
 import axios from "axios";
+import { API_URL } from "../../../types/constants";
 
 export default function Home() {
   const [reviews, setReviews] = useState<ReviewType[]>([]);
 
   const getReviews = async () => {
-    const url = `${import.meta.env.VITE_API_URL}/reviews/all`;
+    const url = `${API_URL}/reviews/all`;
 
     await axios.get(url)
     .then((response) => {
