@@ -5,7 +5,18 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import com.andrewtam.OkResponse
+import com.andrewtam.MessageResponse
+import java.security.SecureRandom
+
+const val SESSION_DURATION = 86400000
+
+fun generateSessionToken(): String {
+    val random = SecureRandom()
+    val bytes = ByteArray(24)
+    random.nextBytes(bytes)
+
+    return Base64.getEncoder().encodeToString(bytes)
+}
 
 @RestController
 @RequestMapping("/users")
@@ -24,8 +35,8 @@ class UserController(@Autowired val userRepo: UserRepo, @Autowired val reviewRep
         return ResponseEntity.ok(ProfileResponse(user.votes, user.reviewCount, reviews))
     }
 
-    @PostMapping
-    fun createAccount(@RequestBody username: String, @RequestBody password: String, @RequestBody email: String): ResponseEntity<OkResponse> {
+    @PostMapping("/createAccount")
+    fun createAccount(@RequestBody username: String, @RequestBody password: String, @RequestBody email: String): ResponseEntity<MessageResponse> {
         if (userRepo.findByUsername(username) != null || userRepo.findByEmail(email) != null) {
             return ResponseEntity.badRequest().build()
         }
@@ -34,27 +45,36 @@ class UserController(@Autowired val userRepo: UserRepo, @Autowired val reviewRep
         val hash = encoder.encode(password)
 
         val user = User(username = username, passwordHash = hash, email = email)
+
+        val sessionToken = generateSessionToken()
+        user.sessionTokenHash = encoder.encode(sessionToken)
+        user.sessionExpiration = Date(System.currentTimeMillis() + SESSION_DURATION)
+
         userRepo.insert(user)
 
-        return ResponseEntity.ok(OkResponse("Account successfully created"))
+        return ResponseEntity.ok(MessageResponse(sessionToken))
     }
 
-    // @PostMapping("/addByParams")
-    // fun postRestaurantAsParams(@RequestBody restaurant: Restaurant): Restaurant {
-    //     return repo.insert(restaurant)
-    // }
+    @PostMapping("/login")
+    fun login(@RequestBody username: String, @RequestBody password: String): ResponseEntity<MessageResponse> {
+        val user = userRepo.findByUsername(username)
 
-    // @DeleteMapping("/{id}")
-    // fun deleteRestaurant(@PathVariable("id") id: String) {
-    //     repo.findByRestaurantId(id)?.let {
-    //         repo.delete(it)
-    //     }
-    // }
+        if (user == null) {
+            return ResponseEntity.badRequest().build()
+        }
 
-    // @PatchMapping("/{id}")
-    // fun updateRestaurant(@PathVariable("id") id: String): Restaurant? {
-    //     return repo.findByRestaurantId(restaurantId = id)?.let {
-    //         repo.save(it.copy(name = "Update"))
-    //     }
-    // }
+        val encoder = BCryptPasswordEncoder()
+
+        if (!encoder.matches(password, user.passwordHash)) {
+            return ResponseEntity.badRequest().build()
+        }
+
+        val sessionToken = generateSessionToken()
+        user.sessionTokenHash = encoder.encode(sessionToken)
+        user.sessionExpiration = Date(System.currentTimeMillis() + SESSION_DURATION)
+
+        userRepo.save(user)
+
+        return ResponseEntity.ok(MessageResponse(sessionToken))
+    }
 }

@@ -18,8 +18,9 @@ data class Review(
     var lectureQuality: Int,
     var hrsPerWeek: Int,
     var text: String,
-    var votes: Int,
-    var comments: List<Comment>,
+    val created: Date = Date(),
+    var votes: Int = 0,
+    var comments: List<Comment> = listOf(),
 )
 
 data class Comment (

@@ -15,5 +15,7 @@ data class User(
     var email: String,
     var votes: Int = 0,
     var reviewCount: Int = 0,
+    var sessionTokenHash: String = "",
+    var sessionExpiration: Date = Date(0),
 )
 
