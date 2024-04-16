@@ -1,12 +1,22 @@
 # Evaluate my Professor
 
-A basic frontend for a Rate My Professor clone, used for my CSE 300 final project demo. There is no backend right now, users and reviews are saved to your local storage.
+A Rate My Professor clone, used for my CSE 300 final project demo.
 
 
 ![](demo.png)
 
 ## Running
+
+To run the frontend:
 ```shell
+cd frontend
 npm install
 npm run dev
+```
+
+To run the backend:
+```shell
+cd backend
+chmod +x gradlew #if permission is denied
+./gradlew bootRun
 ```

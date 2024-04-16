@@ -195,3 +195,10 @@ node_modules/
 .env
 
 .DS_Store
+
+# kotlin
+build/
+.idea/
+*.iml
+.gradle/
+/out/
