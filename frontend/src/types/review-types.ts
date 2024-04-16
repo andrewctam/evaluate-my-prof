@@ -1,13 +1,13 @@
-import { User } from "./user-types";
-
 export interface Comment {
-    poster: User;
+    poster: string; //objectId
+    posterName: string;
     text: string
 }
 
 export interface Review {
     id: number;
-    author: User;
+    author: string; //objectId
+    authorName: string;
     course: string;
     rating: number;
     difficulty: number;
@@ -17,18 +17,4 @@ export interface Review {
     text: string;
     votes: number;
     comments: Comment[];
-}
-
-export enum ReviewActionType {
-    ADD_REVIEW = "ADD_REVIEW",
-    ADD_COMMENT = "ADD_COMMENT",
-    VOTE = "VOTE",
-}
-export type ReviewAction =
-    { type: ReviewActionType.ADD_REVIEW, payload: Review } |
-    { type: ReviewActionType.ADD_COMMENT, payload: { id: number, comment: Comment } } |
-    { type: ReviewActionType.VOTE, payload: { id: number, change: number } };
-    
-export interface ReviewState {
-    reviews: Review[];
 }

@@ -5,12 +5,19 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.core.mapping.Field
 import java.util.*
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
 
 @Document("review")
 data class Review(
     @Id
+    @JsonSerialize(using= ToStringSerializer::class)
     val id: ObjectId = ObjectId(),
+
+    @JsonSerialize(using= ToStringSerializer::class)
     var author: ObjectId,
+    
+    var authorName: String,
     var course: String,
     var rating: Int,
     var difficulty: Int,
@@ -25,7 +32,12 @@ data class Review(
 
 data class Comment (
     @Id
+    @JsonSerialize(using= ToStringSerializer::class)
     val id: ObjectId = ObjectId(),
+
+    @JsonSerialize(using= ToStringSerializer::class)
     var poster: ObjectId,
+
+    var posterName: String,
     var text: String,
 )

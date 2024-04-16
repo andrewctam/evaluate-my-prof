@@ -1,36 +1,40 @@
-import { useContext } from "react";
+import { useEffect, useState } from "react";
 import "./Home.scss";
-import { ReviewActionType, Review as ReviewType } from "../../../types/review-types";
+import {Review as ReviewType } from "../../../types/review-types";
 import Review from "../Review/Review";
 import ReviewInput from "../ReviewInput/ReviewInput";
 import Layout from "../../layout/Layout";
-import { ReviewContext, ReviewDispatchContext, UserContext } from "../../../types/context";
+import axios from "axios";
 
 export default function Home() {
-  const userState = useContext(UserContext);
-  const reviewState = useContext(ReviewContext);
-  const reviewDispatch = useContext(ReviewDispatchContext);
+  const [reviews, setReviews] = useState<ReviewType[]>([]);
 
-  const addReview = (newReview: ReviewType) => {
-    if (userState.currentUser === null) {
-      alert("Not Logged In!");
-      return;
+  const getReviews = async () => {
+    const url = `${import.meta.env.VITE_API_URL}/reviews/all`;
+
+    await axios.get(url)
+    .then((response) => {
+      console.log(response.data);
+
+      setReviews(response.data);
     }
-
-    reviewDispatch({
-      type: ReviewActionType.ADD_REVIEW,
-      payload: newReview,
+    ).catch((error) => {
+      console.error(error);
     });
   };
+
+  useEffect(() => {
+    getReviews();
+  }, []);
 
   return (
     <Layout>
       <div className="feed">
         <h1>Professor Bob from Stony Brook University</h1>
-        <ReviewInput addReview={addReview} />
+        <ReviewInput refreshParent={getReviews} />
 
-        {reviewState.reviews.map((review, i) => (
-          <Review review={review} key={i} />
+        {reviews.map((review, i) => (
+          <Review review={review} key={i} refreshParent={getReviews} />
         ))}
       </div>
     </Layout>

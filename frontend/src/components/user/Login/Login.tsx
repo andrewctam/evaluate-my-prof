@@ -1,64 +1,106 @@
 import { useContext, useState } from "react";
 import "./Login.scss";
 import { UserActionType } from "../../../types/user-types";
-import { names, uniqueNamesGenerator } from "unique-names-generator";
-import { UserContext, UserDispatchContext } from "../../../types/context";
+import { UserDispatchContext } from "../../../types/context";
+import axios from "axios";
 
 export default function Login() {
-  const userState = useContext(UserContext);
-  const dispatch = useContext(UserDispatchContext);
+  const userDispatch = useContext(UserDispatchContext);
 
-  const [nameInput, setNameInput] = useState("");
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [registering, setRegistering] = useState(false);
+  const [error, setError] = useState("");
 
-  const switchUser = (name: string) => {
-    dispatch({
-      type: UserActionType.SWITCH,
-      payload: { name },
+  const loginRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (registering) {
+      if (email === "") {
+        setError("Please enter an email");
+        return;
+      }
+      const eduRegex = /^[^@]+@[^@]+\.edu$/;
+
+      if (!eduRegex.test(email)) {
+        setError("Please enter a valid .edu email");
+        return;
+      }
+    }
+
+    if (username === "") {
+      setError("Please enter a username");
+      return;
+    }
+
+    if (password === "") {
+      setError("Please enter a password");
+      return;
+    }
+    const action = registering ? "register" : "login";
+    const url = `${import.meta.env.VITE_API_URL}/users/${action}`;
+
+    const body = JSON.stringify({
+      username,
+      password,
+      email: registering ? email : undefined,
     });
+    const config = {
+      headers: {
+        "Content-Type": "application/json"
+      },
+    };
+
+    await axios
+      .post(url, body, config)
+      .then((response) => {
+        console.log(response);
+        userDispatch({
+          type: UserActionType.LOGIN,
+          payload: {
+            username,
+            sessionToken: response.data.message,
+          },
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
-
-  const addUser = () => {
-    const name =
-      nameInput.length > 0
-        ? nameInput
-        : uniqueNamesGenerator({ dictionaries: [names] });
-
-    dispatch({
-      type: UserActionType.ADD,
-      payload: { name },
-    });
-
-    setNameInput("");
-  };
-
-  const loggedIn = userState.currentUser;
 
   return (
-    <div className="login">
-      <div>
+    <form className="login" onSubmit={loginRegister}>
+      <h1>{registering ? "Register" : "Login"}</h1>
+
+      <div className="switch" onClick={() => setRegistering(!registering)}>
+        {registering ? "Switch to Login" : "Switch to Register"}
+      </div>
+
+      {registering && (
         <input
-          className="userInput"
-          placeholder="Enter a username..."
-          value={nameInput}
-          onChange={(e) => setNameInput(e.target.value)}
+          placeholder="Enter your .edu email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
+      )}
+      <input
+        placeholder="Enter a username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+      />
+      <input
+        placeholder="Enter a password"
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
 
-        <button onClick={addUser}>Add User</button>
-      </div>
+      <div className="error">{error}</div>
 
-      <div>Click on a user to login as them:</div>
-      <div className="userList">
-        {userState.users.map((user) => (
-          <div key={user.name}>
-            <button
-              className={loggedIn?.name === user.name ? "selected" : ""}
-              onClick={() => switchUser(user.name)}
-            >
-              {user.name}
-            </button>
-          </div>
-        ))}
-      </div>
-    </div>
+      <button onClick={loginRegister}>
+        {registering ? "Register" : "Login"}
+      </button>
+    </form>
   );
 }

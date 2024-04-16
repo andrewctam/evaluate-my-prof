@@ -1,18 +1,46 @@
 import { useParams } from "react-router-dom";
 import Layout from "../../layout/Layout";
-import { useContext } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import Review from "../../home/Review/Review";
 import "./Profile.scss";
-import { ReviewContext } from "../../../types/context";
+import { Review as ReviewType } from "../../../types/review-types";
+import { UserContext } from "../../../types/context";
+import axios from "axios";
 
 export default function Profile() {
-  const reviewContext = useContext(ReviewContext);
-
   const params = useParams();
   const username = params?.username;
-      
-  const reviews = reviewContext.reviews.filter((review) => review.author.name === username);
-  const score = reviews.reduce((acc, review) => acc + review.votes, 0);
+  const userState = useContext(UserContext);
+
+  const [reviews, setReviews] = useState<ReviewType[]>([]);
+  
+  const getProfile = async () => {
+    if (userState.sessionToken === null) {
+      return;
+    }
+    const url = `${import.meta.env.VITE_API_URL}/reviews/user/${username}`;
+
+    await axios.get(url)
+    .then((response) => {
+      console.log(response);
+      setReviews(response.data.reviews);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  };
+
+  useEffect(() => {
+    getProfile();
+  }, [])
+
+  const score = useMemo(() => {
+    const sum = reviews.reduce((acc: number, review: ReviewType) => {
+      return acc + review.rating;
+    }, 0);  
+
+    return sum;
+  }, [reviews])
 
   return <Layout>
     <div className="profile">
@@ -22,8 +50,8 @@ export default function Profile() {
         <div> Reviews: {reviews.length} </div>
       </div>
       <div className="feed">
-        {reviews.map((review) => (
-          <Review key={review.id} review={review} />
+        {reviews.map((review, i) => (
+          <Review key={i} review={review} refreshParent={getProfile} />
         ))}
       </div>
     </div>

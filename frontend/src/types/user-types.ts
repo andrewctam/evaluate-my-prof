@@ -1,15 +1,16 @@
-export interface User {
-    name: string;
-}
 export enum UserActionType {
-    SWITCH = "SWITCH",
-    ADD = "ADD",
+    LOGIN = "LOGIN",
+    LOGOUT = "LOGOUT",
 }
-export interface UserAction {
-    type: UserActionType;
-    payload: User;
-}
+type LoginPayload = {
+    username: string;
+    sessionToken: string;
+};
+export type UserAction =
+    { type: UserActionType.LOGIN, payload: LoginPayload } |
+    { type: UserActionType.LOGOUT, payload: {}};
+
 export interface UserState {
-    users: User[];
-    currentUser: User | null;
+    username: string,
+    sessionToken: string | null
 }

@@ -1,17 +1,17 @@
 import { useContext, useState } from "react";
 
 import "./ReviewInput.scss";
-import { Review } from "../../../types/review-types";
-import { User } from "../../../types/user-types";
 import { UserContext } from "../../../types/context";
+import axios from "axios";
 
-interface ReviewInputProps {
-  addReview: (review: Review) => void;
-}
 
 const courses = ["CSE 114", "CSE 214", "CSE 320"];
 
-export default function ReviewInput({ addReview }: ReviewInputProps) {
+interface ReviewInputProps {
+  refreshParent: () => void;
+}
+
+export default function ReviewInput({ refreshParent }: ReviewInputProps) {
   const [rating, setRating] = useState(3);
   const [difficulty, setDifficulty] = useState(3);
   const [amountLearned, setAmountLearned] = useState(3);
@@ -20,37 +20,47 @@ export default function ReviewInput({ addReview }: ReviewInputProps) {
   const [course, setCourse] = useState(courses[0]);
   const [text, setText] = useState("");
 
-  const UserState = useContext(UserContext);
+  const userState = useContext(UserContext);
 
-  const create = () => {
-    if (UserState.currentUser === null) {
-        alert("Not Logged In!");
-        return;
+  const addReview = async () => {
+    if (userState.sessionToken === null) {
+      return;
     }
-    
-    const author: User = { name: UserState.currentUser.name };
-
-    addReview({
-      id: 0, // This will be set by the reducer
-      author,
+    const url = `${import.meta.env.VITE_API_URL}/reviews/create`;
+    const body = JSON.stringify({
+      authorUsername: userState.username,
+      sessionToken: userState.sessionToken,
+      text,
+      course,
       rating,
       difficulty,
       amountLearned,
       lectureQuality,
-      hrsPerWeek,
-      text,
-      course,
-      votes: 0,
-      comments: [],
-    });
+      hrsPerWeek
+    })
+    const config = { 
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }
 
-    setRating(3);
-    setDifficulty(3);
-    setAmountLearned(3);
-    setLectureQuality(3);
-    setHrsPerWeek(5);
-    setText("");
+    await axios.post(url, body, config)
+    .then((response) => {
+      console.log(response);
+      setRating(3);
+      setDifficulty(3);
+      setAmountLearned(3);
+      setLectureQuality(3);
+      setHrsPerWeek(5);
+      setText("");
+      
+      refreshParent();
+    })
+    .catch((error) => {
+      console.error(error);
+    });
   };
+
 
   return (
     <div className="reviewInput">
@@ -98,7 +108,7 @@ export default function ReviewInput({ addReview }: ReviewInputProps) {
 
       <div>
         <textarea value={text} onChange={(e) => setText(e.target.value)} />
-        <button onClick={create}>Create Review</button>
+        <button onClick={addReview}>Create Review</button>
       </div>
     </div>
   );

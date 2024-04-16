@@ -1,25 +1,48 @@
 .login {
     background-color: rgba(154, 190, 197, 0.8);
     width: 250px;
-    height: 250px;
+    height: 350px;
     padding: 20px;
     position: fixed;
     bottom: 0px;
     right: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 
+    h1 {
+        margin: 0px;
+        text-align: center;
+    }
     div {
         margin: 5px;
     }
-    .userInput {
+    button {
+        display: block;
+        border-radius: 5px;
+    }
+    input {
+        width: 200px;
         height: 25px;
         padding: 5px;
-        margin-right: 2px;
+        margin: 10px;
         border-radius: 5px;
         border: 1px solid black;
     }
 
     .selected {
         background-color: rgb(85, 137, 92);
+    }
+
+    .switch {
+        text-align: center;
+        cursor: pointer;
+        color: rgb(33, 108, 230);
+    }
+
+    .error {
+        color: red;
     }
 }
 

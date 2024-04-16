@@ -11,7 +11,7 @@ import kotlin.jvm.optionals.getOrNull
 fun verifySessionToken(user: User, sessionToken: String): Boolean {
     val encoder = BCryptPasswordEncoder()
 
-    return (user.sessionExpiration.before(Date()) && 
+    return (user.sessionExpiration.after(Date()) && 
         encoder.matches(sessionToken, user.sessionTokenHash))
 }
 
@@ -24,34 +24,39 @@ class ReviewController(@Autowired val userRepo: UserRepo, @Autowired val reviewR
         return reviewRepo.findAll()
     }
 
+    @GetMapping("/user/{username}")
+    fun getUserReviews(@PathVariable("username") username: String): ResponseEntity<ProfileResponse>{
+        val user = userRepo.findByUsername(username)
+
+        if (user == null) {
+            return ResponseEntity.notFound().build()
+        }
+
+        val reviews = reviewRepo.findByAuthor(user.id)
+        return ResponseEntity.ok(ProfileResponse(reviews))
+    }
+
     @PostMapping("/create")
-    fun createReview(
-            authorUsername: String,
-            @RequestBody sessionToken: String,
-            @RequestBody text: String,
-            @RequestBody course: String,
-            @RequestBody rating: Int,
-            @RequestBody difficulty: Int,
-            @RequestBody amountLearned: Int,
-            @RequestBody lectureQuality: Int,
-            @RequestBody hrsPerWeek: Int    
-        ) : ResponseEntity<MessageResponse> {
+    fun createReview(@RequestBody body: CreateReviewRequest) : ResponseEntity<MessageResponse> {
+        val user = userRepo.findByUsername(body.authorUsername)
 
-        val user = userRepo.findByUsername(authorUsername)
-
-        if (user == null || !verifySessionToken(user, sessionToken)) {
-            return ResponseEntity.badRequest().body(MessageResponse("Error"))
+        if (user == null) {
+            return ResponseEntity.badRequest().body(MessageResponse("User not found"))
+        }
+        if (!verifySessionToken(user, body.sessionToken)) {
+            return ResponseEntity.badRequest().body(MessageResponse("Invalid session token"))
         }
 
         val review = Review(
             author = user.id,
-            text = text,
-            course = course,
-            rating = rating,
-            difficulty = difficulty,
-            amountLearned = amountLearned,
-            lectureQuality = lectureQuality,
-            hrsPerWeek = hrsPerWeek
+            authorName = user.username,
+            text = body.text,
+            course = body.course,
+            rating = body.rating,
+            difficulty = body.difficulty,
+            amountLearned = body.amountLearned,
+            lectureQuality = body.lectureQuality,
+            hrsPerWeek = body.hrsPerWeek
         )
 
         reviewRepo.insert(review)
@@ -60,61 +65,55 @@ class ReviewController(@Autowired val userRepo: UserRepo, @Autowired val reviewR
     }
 
     @PostMapping("/vote")
-    fun voteReview(
-            @RequestBody authorUsername: String,
-            @RequestBody sessionToken: String,
-            @RequestBody reviewId: String,
-            @RequestBody vote: Int
-        ) : ResponseEntity<MessageResponse> {
+    fun voteReview(@RequestBody body: VoteRequest) : ResponseEntity<MessageResponse> {
 
-        val user = userRepo.findByUsername(authorUsername)
+        val user = userRepo.findByUsername(body.authorUsername)
 
-        if (user == null || !verifySessionToken(user, sessionToken)) {
-            return ResponseEntity.badRequest().body(MessageResponse("Error"))
+        if (user == null) {
+            return ResponseEntity.badRequest().body(MessageResponse("User not found"))
+        }
+        if (!verifySessionToken(user, body.sessionToken)) {
+            return ResponseEntity.badRequest().body(MessageResponse("Invalid session token"))
         }
 
-        val review = reviewRepo.findById(reviewId).getOrNull()
+        val review = reviewRepo.findById(body.reviewId).getOrNull()
 
         if (review == null) {
-            return ResponseEntity.badRequest().body(MessageResponse("Error"))
+            return ResponseEntity.badRequest().body(MessageResponse("Review not found"))
         }
 
-        if (vote == 1) {
-            review.votes += 1
-        } else if (vote == -1) {
-            review.votes -= 1
-        } else {
-            return ResponseEntity.badRequest().body(MessageResponse("Error"))
+        if (body.vote != 1 && body.vote != -1) {
+            return ResponseEntity.badRequest().body(MessageResponse("Invalid vote: " + body.vote))
         }
 
+        review.votes += body.vote
         reviewRepo.save(review)
 
         return ResponseEntity.ok(MessageResponse("Vote successfully added"))
     }
 
     @PostMapping("/comment")
-    fun commentReview(
-            @RequestBody authorUsername: String,
-            @RequestBody sessionToken: String,
-            @RequestBody reviewId: String,
-            @RequestBody text: String
-        ) : ResponseEntity<MessageResponse> {
+    fun commentReview(@RequestBody body: CommentRequest) : ResponseEntity<MessageResponse> {
 
-        val user = userRepo.findByUsername(authorUsername)
+        val user = userRepo.findByUsername(body.authorUsername)
 
-        if (user == null || !verifySessionToken(user, sessionToken)) {
-            return ResponseEntity.badRequest().body(MessageResponse("Error"))
+        if (user == null) {
+            return ResponseEntity.badRequest().body(MessageResponse("User not found"))
+        }
+        if (!verifySessionToken(user, body.sessionToken)) {
+            return ResponseEntity.badRequest().body(MessageResponse("Invalid session token"))
         }
 
-        val review = reviewRepo.findById(reviewId).getOrNull()
+        val review = reviewRepo.findById(body.reviewId).getOrNull()
 
         if (review == null) {
-            return ResponseEntity.badRequest().body(MessageResponse("Error"))
+            return ResponseEntity.badRequest().body(MessageResponse("Review not found"))
         }
 
         val comment = Comment(
             poster = user.id,
-            text = text
+            posterName = user.username,
+            text = body.text
         )
 
         review.comments += comment

@@ -22,29 +22,16 @@ fun generateSessionToken(): String {
 @RequestMapping("/users")
 class UserController(@Autowired val userRepo: UserRepo, @Autowired val reviewRepo: ReviewRepo) {
 
-    @GetMapping("/{username}")
-    fun getUserProfile(@PathVariable("id") id: String): ResponseEntity<ProfileResponse>{
-        val user = userRepo.findByUsername(id)
-
-        if (user == null) {
-            return ResponseEntity.notFound().build()
-        }
-
-        val reviews = reviewRepo.findByAuthor(user)
-
-        return ResponseEntity.ok(ProfileResponse(user.votes, user.reviewCount, reviews))
-    }
-
-    @PostMapping("/createAccount")
-    fun createAccount(@RequestBody username: String, @RequestBody password: String, @RequestBody email: String): ResponseEntity<MessageResponse> {
-        if (userRepo.findByUsername(username) != null || userRepo.findByEmail(email) != null) {
+    @PostMapping("/register")
+    fun register(@RequestBody body: RegisterRequest): ResponseEntity<MessageResponse> {
+        if (userRepo.findByUsername(body.username) != null || userRepo.findByEmail(body.email) != null) {
             return ResponseEntity.badRequest().build()
         }
 
         val encoder = BCryptPasswordEncoder()
-        val hash = encoder.encode(password)
+        val hash = encoder.encode(body.password)
 
-        val user = User(username = username, passwordHash = hash, email = email)
+        val user = User(username = body.username, passwordHash = hash, email = body.email)
 
         val sessionToken = generateSessionToken()
         user.sessionTokenHash = encoder.encode(sessionToken)
@@ -56,8 +43,8 @@ class UserController(@Autowired val userRepo: UserRepo, @Autowired val reviewRep
     }
 
     @PostMapping("/login")
-    fun login(@RequestBody username: String, @RequestBody password: String): ResponseEntity<MessageResponse> {
-        val user = userRepo.findByUsername(username)
+    fun login(@RequestBody body: LoginRequest): ResponseEntity<MessageResponse> {
+        val user = userRepo.findByUsername(body.username)
 
         if (user == null) {
             return ResponseEntity.badRequest().build()
@@ -65,7 +52,7 @@ class UserController(@Autowired val userRepo: UserRepo, @Autowired val reviewRep
 
         val encoder = BCryptPasswordEncoder()
 
-        if (!encoder.matches(password, user.passwordHash)) {
+        if (!encoder.matches(body.password, user.passwordHash)) {
             return ResponseEntity.badRequest().build()
         }
 
