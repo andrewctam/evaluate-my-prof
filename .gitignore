@@ -203,3 +203,4 @@ build/
 .gradle/
 /out/
 application.properties
+.vscode
