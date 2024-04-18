@@ -8,7 +8,7 @@ plugins {
 }
 
 group = 'com.andrewtam'
-version = '0.0.1-SNAPSHOT'
+version = '1.0'
 
 java {
 	sourceCompatibility = '17'
@@ -36,4 +36,12 @@ tasks.withType(KotlinCompile) {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+jar {
+    manifest {
+		attributes 'Main-Class': 'com.andrewtam.EmpApplication'
+    }
+
+    from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
 }
