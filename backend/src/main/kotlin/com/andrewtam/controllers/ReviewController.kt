@@ -21,7 +21,7 @@ class ReviewController(@Autowired val userRepo: UserRepo, @Autowired val reviewR
 
     @GetMapping("/all")
     fun getReviews(): List<Review> {
-        return reviewRepo.findAll()
+        return reviewRepo.findAllByOrderByCreatedDesc()
     }
 
     @GetMapping("/user/{username}")

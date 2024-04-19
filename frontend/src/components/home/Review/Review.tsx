@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { UserContext } from "../../../types/context";
 import { API_URL } from "../../../types/constants";
+import moment from "moment";
 
 interface ReviewProps {
   review: ReviewType;
@@ -53,9 +54,11 @@ export default function Review({ review, refreshParent }: ReviewProps) {
   };
 
   const deleteReview = async () => {
-    if (userState.sessionToken === null) {
+    if (userState.sessionToken === null ||
+        !window.confirm("Are you sure you want to delete this review?")) {
       return;
     }
+
     const url = `${API_URL}/reviews/delete`;
     const body = JSON.stringify({
       authorUsername: userState.username,
@@ -93,8 +96,9 @@ export default function Review({ review, refreshParent }: ReviewProps) {
         <Link to={`/profile/${review.authorName}`}>
           <span className="username">{review.authorName}</span>
         </Link>
-        <span>'s review of </span>
+        <span>{"'s review of "}</span>
         <span className="course">{review.course}</span>
+        <span>{` on ${moment(review.created).format("h:mm a, MMMM Do, YYYY ")}`}</span>
       </div>
 
       <div className="boxes">

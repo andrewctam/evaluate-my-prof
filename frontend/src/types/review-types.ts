@@ -14,6 +14,7 @@ export interface Review {
     amountLearned: number;
     lectureQuality: number;
     hrsPerWeek: number;
+    created: Date;
     text: string;
     votes: number;
     comments: Comment[];
