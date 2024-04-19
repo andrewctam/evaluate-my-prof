@@ -26,3 +26,8 @@ class CommentRequest(
     val reviewId: String,
     val text: String
 )
+class DeleteReviewRequest(
+    val authorUsername: String,
+    val sessionToken: String,
+    val reviewId: String
+)

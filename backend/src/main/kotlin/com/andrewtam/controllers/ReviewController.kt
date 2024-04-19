@@ -122,4 +122,29 @@ class ReviewController(@Autowired val userRepo: UserRepo, @Autowired val reviewR
 
         return ResponseEntity.ok(MessageResponse("Comment successfully added"))
     }
+
+    @PostMapping("/delete")
+    fun deleteReview(@RequestBody body: DeleteReviewRequest) : ResponseEntity<MessageResponse> {
+        val user = userRepo.findByUsername(body.authorUsername)
+
+        if (user == null) {
+            return ResponseEntity.badRequest().body(MessageResponse("User not found"))
+        }
+        if (!verifySessionToken(user, body.sessionToken)) {
+            return ResponseEntity.badRequest().body(MessageResponse("Invalid session token"))
+        }
+
+        val review = reviewRepo.findById(body.reviewId).getOrNull()
+
+        if (review == null) {
+            return ResponseEntity.badRequest().body(MessageResponse("Review not found"))
+        }
+
+        if (review.author != user.id) {
+            return ResponseEntity.badRequest().body(MessageResponse("Not the owner of the review"))
+        }
+
+        reviewRepo.deleteById(body.reviewId);
+        return ResponseEntity.ok(MessageResponse("Review deleted"))
+    }
 }
