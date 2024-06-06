@@ -1,12 +1,13 @@
-import { useContext, useState } from "react";
-import "./Login.scss";
-import { UserActionType } from "../../../types/user-types";
-import { UserDispatchContext } from "../../../types/context";
+import { useState } from "react";
 import axios from "axios";
 import { API_URL } from "../../../types/constants";
 
+import "./Login.scss";
+import { useAppDispatch } from "../../../app/hooks";
+import { login } from "../../../features/user/userSlice";
+
 export default function Login() {
-  const userDispatch = useContext(UserDispatchContext);
+  const dispatch = useAppDispatch();
 
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -57,13 +58,10 @@ export default function Login() {
       .post(url, body, config)
       .then((response) => {
         console.log(response);
-        userDispatch({
-          type: UserActionType.LOGIN,
-          payload: {
-            username,
-            sessionToken: response.data.message,
-          },
-        });
+        dispatch(login({
+          username,
+          sessionToken: response.data.message
+        }));
       })
       .catch((error) => {
         console.error(error);

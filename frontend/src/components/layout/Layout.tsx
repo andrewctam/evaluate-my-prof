@@ -1,9 +1,9 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./Layout.scss";
 import Login from "../user/Login/Login";
 import { Link } from "react-router-dom";
-import { UserContext, UserDispatchContext } from "../../types/context";
-import { UserActionType } from "../../types/user-types";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { logout } from "../../features/user/userSlice";
 
 interface LayoutProps {
   children?: React.ReactNode;
@@ -12,19 +12,16 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   const [showLogin, setShowLogin] = useState(false);
 
-  const userContext = useContext(UserContext);
-  const userDispatch = useContext(UserDispatchContext);
+  const user = useAppSelector(state => state.user);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     setShowLogin(false);
-  }, [userContext.sessionToken])
+  }, [user.sessionToken])
   
   const handleClick = () => {
-    if (userContext.sessionToken) {
-      userDispatch({
-        type: UserActionType.LOGOUT,
-        payload: {}
-      });
+    if (user.sessionToken) {
+      dispatch(logout());
     } else {
       setShowLogin(!showLogin);
     }
@@ -41,7 +38,7 @@ export default function Layout({ children }: LayoutProps) {
           className="loginLink"
           onClick={handleClick}
         >
-          {userContext.sessionToken ? `Logged in as ${userContext.username}. Log Out` : "Log in"}
+          {user.sessionToken ? `Logged in as ${user.username}. Log Out` : "Log in"}
         </span>
       </div>
 

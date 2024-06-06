@@ -1,9 +1,9 @@
-import { useContext, useState } from "react";
 
 import "./ReviewInput.scss";
-import { UserContext } from "../../../types/context";
 import axios from "axios";
 import { API_URL } from "../../../types/constants";
+import { useState } from "react";
+import { useAppSelector } from "../../../app/hooks";
 
 
 const courses = ["CSE 114", "CSE 214", "CSE 320"];
@@ -21,16 +21,16 @@ export default function ReviewInput({ refreshParent }: ReviewInputProps) {
   const [course, setCourse] = useState(courses[0]);
   const [text, setText] = useState("");
 
-  const userState = useContext(UserContext);
+  const user = useAppSelector(state => state.user);
 
   const addReview = async () => {
-    if (userState.sessionToken === null) {
+    if (user.sessionToken === null) {
       return;
     }
     const url = `${API_URL}/reviews/create`;
     const body = JSON.stringify({
-      authorUsername: userState.username,
-      sessionToken: userState.sessionToken,
+      authorUsername: user.username,
+      sessionToken: user.sessionToken,
       text,
       course,
       rating,

@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 
 import "./Review.scss";
 import {
@@ -7,9 +7,9 @@ import {
 } from "../../../types/review-types";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { UserContext } from "../../../types/context";
 import { API_URL } from "../../../types/constants";
 import moment from "moment";
+import { useAppSelector } from "../../../app/hooks";
 
 interface ReviewProps {
   review: ReviewType;
@@ -20,16 +20,16 @@ export default function Review({ review, refreshParent }: ReviewProps) {
   const [addingComment, setAddingComment] = useState(false);
   const [commentText, setCommentText] = useState("");
 
-  const userState = useContext(UserContext);
+  const user = useAppSelector(state => state.user);
 
   const addCommentOrVote = async (action: "vote" | "comment", change?: 1 | -1) => {
-    if (userState.sessionToken === null) {
+    if (user.sessionToken === null) {
       return;
     }
     const url = `${API_URL}/reviews/${action}`;
     const body = JSON.stringify({
-      authorUsername: userState.username,
-      sessionToken: userState.sessionToken,
+      authorUsername: user.username,
+      sessionToken: user.sessionToken,
       reviewId: review.id,
       text: action === "comment" ? commentText : undefined,
       vote: action === "vote" ? change : undefined
@@ -54,15 +54,15 @@ export default function Review({ review, refreshParent }: ReviewProps) {
   };
 
   const deleteReview = async () => {
-    if (userState.sessionToken === null ||
+    if (user.sessionToken === null ||
         !window.confirm("Are you sure you want to delete this review?")) {
       return;
     }
 
     const url = `${API_URL}/reviews/delete`;
     const body = JSON.stringify({
-      authorUsername: userState.username,
-      sessionToken: userState.sessionToken,
+      authorUsername: user.username,
+      sessionToken: user.sessionToken,
       reviewId: review.id
     })
     const config = { 
@@ -135,7 +135,7 @@ export default function Review({ review, refreshParent }: ReviewProps) {
         {addingComment ? "Cancel Comment" : "Add Comment"}
       </div>
 
-      {userState.username === review.authorName && (
+      {user.username === review.authorName && (
         <div onClick={deleteReview}>
           <TrashCan />
         </div>

@@ -1,22 +1,22 @@
 import { useParams } from "react-router-dom";
 import Layout from "../../layout/Layout";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Review from "../../home/Review/Review";
 import "./Profile.scss";
 import { Review as ReviewType } from "../../../types/review-types";
-import { UserContext } from "../../../types/context";
 import axios from "axios";
 import { API_URL } from "../../../types/constants";
+import { useAppSelector } from "../../../app/hooks";
 
 export default function Profile() {
   const params = useParams();
   const username = params?.username;
-  const userState = useContext(UserContext);
+  const user = useAppSelector(state => state.user);
 
   const [reviews, setReviews] = useState<ReviewType[]>([]);
   
   const getProfile = async () => {
-    if (userState.sessionToken === null) {
+    if (user.sessionToken === null) {
       return;
     }
     const url = `${API_URL}/reviews/user/${username}`;
