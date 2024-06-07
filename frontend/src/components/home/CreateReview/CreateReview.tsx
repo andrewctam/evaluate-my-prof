@@ -52,9 +52,10 @@ export default function CreateReview({ courses, close }: CreateReviewProps) {
     <div className="reviewInput">
       <div className="">
         <div>
-          <label htmlFor="courseselect">Course:</label>
+          <label htmlFor="courseSelect">Course:</label>
           <select
-            id="courseselect"
+            className="courseSelect"
+            id="courseSelect"
             value={course}
             onChange={(e) => setCourse(e.target.value)}
           >
@@ -73,7 +74,7 @@ export default function CreateReview({ courses, close }: CreateReviewProps) {
           <div>
             <input
               type="text"
-              className="addCourseInput"
+              className="courseSelect"
               placeholder="Course Name"
               value={newCourse}
               onChange={(e) => setNewCourse(e.target.value)}

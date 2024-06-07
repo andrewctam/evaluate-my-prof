@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Profile from "./components/user/Profile/Profile";
 import { Provider } from "react-redux";
 import store from "./app/store";
+import ProfessorPage from "./components/home/ProfessorPage/ProfessorPage";
 
 export default function App() {
   return (
@@ -11,7 +12,8 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="profile/:username" element={<Profile />} />
+          <Route path="/profile/:username" element={<Profile />} />
+          <Route path="/:school/:profName" element={<ProfessorPage />} />
         </Routes>
       </BrowserRouter>
     </Provider>
