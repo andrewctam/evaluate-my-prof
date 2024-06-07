@@ -1,11 +1,11 @@
 import { useParams } from "react-router-dom";
 
 import { useMemo } from "react";
-import Review from "../../reviews/Review/Review";
 import "./Profile.scss";
 import { useGetFileteredReviewsQuery } from "../../../features/api/apiSlice";
 import { Review as ReviewType } from "../../../features/reviews/reviewsSlice";
 import Layout from "../../layout/Layout";
+import ReviewFeed from "../../reviews/ReviewFeed/ReviewFeed";
 
 export default function Profile() {
   const params = useParams();
@@ -37,9 +37,12 @@ export default function Profile() {
         <div> Reviews: {reviews.length} </div>
       </div>
       <div className="feed">
-        {reviews.map((review, i) => (
-          <Review key={i} review={review} showProfSchool />
-        ))}
+       <ReviewFeed
+          reviews={reviews}
+          showProfFilter
+          showSchoolFilter
+          reviewShowProfSchool
+        />
       </div>
     </div>
 

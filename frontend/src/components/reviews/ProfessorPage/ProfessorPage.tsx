@@ -61,7 +61,7 @@ export default function ProfessorPage() {
             courses={courses}
           />
         ) : (
-          <ReviewFeed reviews={reviews ?? []} courses={courses} />
+          <ReviewFeed reviews={reviews ?? []} showCourseFilter />
         )}
       </div>
     </Layout>
