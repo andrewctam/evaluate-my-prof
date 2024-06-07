@@ -49,7 +49,7 @@ export default function Home() {
     if (selectedProf !== ADD_NEW_PROF) {
       navigate(`/reviews/${selectedSchool}/${selectedProf}`);
     } else {
-      if (isLoading) return;
+      if (isLoading || user.sessionToken === null) return;
 
       try {
         const payload: AddProfessorPayload = {
