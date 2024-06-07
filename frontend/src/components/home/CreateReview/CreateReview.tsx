@@ -21,10 +21,12 @@ export default function CreateReview({
   const [amountLearned, setAmountLearned] = useState(3);
   const [lectureQuality, setLectureQuality] = useState(3);
   const [hrsPerWeek, setHrsPerWeek] = useState(5);
-  const [course, setCourse] = useState(courses[0]);
+  const [course, setCourse] = useState("");
   const [text, setText] = useState("");
 
   const [newCourse, setNewCourse] = useState("");
+
+  const [error, setError] = useState("");
 
   const user = useAppSelector((state) => state.user);
   const [addReview, { isLoading }] = useAddReviewMutation();
@@ -35,6 +37,17 @@ export default function CreateReview({
     if (isLoading || user.sessionToken === null) {
       return;
     }
+    if (text === "" || course === "") {
+      setError("Please fill out all fields");
+      return;
+    }
+
+    if (course === ADD_NEW_COURSE && newCourse === "") {
+      setError("Please enter a course name");
+      return;
+    }
+    setError("");
+    
     const payload: AddReviewPayload = {
       authorUsername: user.username,
       sessionToken: user.sessionToken,
@@ -68,6 +81,8 @@ export default function CreateReview({
             value={course}
             onChange={(e) => setCourse(e.target.value)}
           >
+            <option value="" />
+
             {courses.map((course, i) => (
               <option value={course} key={i}>
                 {course}
@@ -120,6 +135,7 @@ export default function CreateReview({
       </div>
 
       <div>
+        <div className="error">{error}</div>
         <textarea value={text} onChange={(e) => setText(e.target.value)} />
         <button onClick={handleAddReview}>Create Review</button>
       </div>

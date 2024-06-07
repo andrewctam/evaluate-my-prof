@@ -1,11 +1,11 @@
 import "./ProfessorPage.scss";
-import Review from "../Review/Review";
 import Layout from "../../layout/Layout";
 import { useGetFileteredReviewsQuery } from "../../../features/api/apiSlice";
 import { useMemo, useState } from "react";
 import CreateReview from "../CreateReview/CreateReview";
 import { useAppSelector } from "../../../app/hooks";
 import { useParams } from "react-router-dom";
+import ReviewFeed from "../ReviewFeed/ReviewFeed";
 
 export default function ProfessorPage() {
   const params = useParams();
@@ -21,7 +21,7 @@ export default function ProfessorPage() {
     profName,
     schoolName,
   });
-  
+
   const user = useAppSelector((state) => state.user);
 
   const [creating, setCreating] = useState(false);
@@ -36,7 +36,6 @@ export default function ProfessorPage() {
 
     const arr = Array.from(courseSet);
     arr.sort();
-    arr.unshift("");
     return arr;
   }, [reviews]);
 
@@ -46,12 +45,12 @@ export default function ProfessorPage() {
         <h1>{`${profName} from ${schoolName}`}</h1>
 
         {user.sessionToken !== null && (
-          <button
+          <div
             className={`createReview ${creating ? "cancel" : ""}`}
             onClick={() => setCreating(!creating)}
           >
-            {creating ? "Cancel" : "Create Review"}
-          </button>
+            {creating ? "Cancel" : "Create New Review"}
+          </div>
         )}
 
         {creating ? (
@@ -62,7 +61,7 @@ export default function ProfessorPage() {
             courses={courses}
           />
         ) : (
-          reviews?.map((review, i) => <Review review={review} key={i} />)
+          <ReviewFeed reviews={reviews ?? []} courses={courses} />
         )}
       </div>
     </Layout>

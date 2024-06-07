@@ -12,8 +12,8 @@
 
     .createReview {
         padding: 10px;
-        background-color: rgb(159, 231, 165);
-        color: black;
+        color: rgb(101, 141, 104);
+        text-decoration: underline;
         border: none;
         cursor: pointer;
         margin-bottom: 20px;
@@ -21,7 +21,7 @@
     }
 
     .cancel {
-        background-color: rgb(231, 159, 159);
+        color: rgb(244, 127, 127);
     }
 }
 
