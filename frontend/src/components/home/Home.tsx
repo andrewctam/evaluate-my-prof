@@ -20,7 +20,7 @@ export default function Home() {
   const professors = useGetProfessorsQuery(selectedSchool);
   const [addProfessor, { isLoading }] = useAddProfessorMutation();
 
-  const user = useAppSelector(state => state.user);
+  const user = useAppSelector((state) => state.user);
 
   const loggedIn = user.sessionToken !== null;
   const ADD_NEW_PROF = "Add New Professor";
@@ -32,14 +32,17 @@ export default function Home() {
       (newProfName !== "" && newProfName !== ADD_NEW_PROF)); // or the new prof is a valid name
 
   useEffect(() => {
-    if (!isLoading && selectedSchool !== "" && !loggedIn && professors.data?.length === 0) {
-      setError("No professors found for this school. Log in to add one!")
+    if (
+      !isLoading &&
+      selectedSchool !== "" &&
+      !loggedIn &&
+      professors.data?.length === 0
+    ) {
+      setError("No professors found for this school. Log in to add one!");
     } else {
       setError("");
     }
-
-
-  }, [isLoading, selectedSchool, loggedIn, professors.data])
+  }, [isLoading, selectedSchool, loggedIn, professors.data]);
 
   const handleSubmit = async () => {
     if (!canSubmit) {
@@ -68,53 +71,60 @@ export default function Home() {
 
   return (
     <Layout>
-      <div>
-        <h2>Welcome to Evaluate My Professor!</h2>
+      <div className="home">
+        <h2>Evaluate My Professor</h2>
+        <h3>Select your school and professor below to find reviews</h3>
         <div className="profSelector">
-          <span>University</span>
-          <select
-            value={selectedSchool}
-            onChange={(e) => setSelectedSchool(e.target.value)}
-          >
-            <option value={""} />
+          <div className="schoolSelect">
+            <span>University: </span>
+            <select
+              value={selectedSchool}
+              onChange={(e) => setSelectedSchool(e.target.value)}
+            >
+              <option value="" />
 
-            {schools.map((school, i) => (
-              <option key={i} value={school}>
-                {school}
-              </option>
-            ))}
-          </select>
+              {schools.map((school, i) => (
+                <option key={i} value={school}>
+                  {school}
+                </option>
+              ))}
+            </select>
+          </div>
 
-          <span>Professor</span>
-          <select
-            value={selectedProf}
-            disabled={selectedSchool === ""}
-            onChange={(e) => setSelectedProf(e.target.value)}
-          >
-            <option value={""} />
+          <div className="profSelect">
+            <span>Professor: </span>
+            <select
+              value={selectedProf}
+              disabled={selectedSchool === ""}
+              onChange={(e) => setSelectedProf(e.target.value)}
+            >
+              <option value="" />
 
-            {professors.data?.map((prof, i) => (
-              <option key={i} value={prof}>
-                {prof}
-              </option>
-            ))}
+              {professors.data?.map((prof, i) => (
+                <option key={i} value={prof}>
+                  {prof}
+                </option>
+              ))}
 
-            {loggedIn && (<option value={ADD_NEW_PROF}>{ADD_NEW_PROF}</option>)}
-          </select>
+              {loggedIn && <option value={ADD_NEW_PROF}>{ADD_NEW_PROF}</option>}
+            </select>
 
-          {selectedProf === ADD_NEW_PROF && (
-            <input
-              type="text"
-              className="courseSelect"
-              placeholder="Professor Name"
-              value={newProfName}
-              onChange={(e) => setNewProfName(e.target.value)}
-            />
-          )}
+            {selectedProf === ADD_NEW_PROF && (
+              <input
+                type="text"
+                className="courseSelect"
+                placeholder="Professor Name"
+                value={newProfName}
+                onChange={(e) => setNewProfName(e.target.value)}
+              />
+            )}
 
+          </div>
           {canSubmit && (
             <button onClick={handleSubmit} className="submit">
-              {selectedProf === ADD_NEW_PROF ? "Add Professor" : "View Reviews"}
+              {selectedProf === ADD_NEW_PROF
+                ? "Add Professor"
+                : "View Reviews"}
             </button>
           )}
 

@@ -21,24 +21,25 @@ export default function ReviewFeed({ reviews, courses }: ReviewFeedProps) {
 
     return reviews.filter((r) => r.course === courseFilter);
   }, [reviews, courseFilter]);
+  if (reviews.length === 0) {
+    return <div className="noReviews">No Reviews Yet</div>;
+  }
 
   return (
     <>
-      {reviews.length > 0 && (
-        <select
-          className="filter"
-          value={courseFilter}
-          onChange={(e) => setCourseFilter(e.target.value)}
-        >
-          <option value={""}>All Courses</option>
+      <select
+        className="filter"
+        value={courseFilter}
+        onChange={(e) => setCourseFilter(e.target.value)}
+      >
+        <option value={""}>All Courses</option>
 
-          {courses.map((course, i) => (
-            <option value={course} key={i}>
-              {course}
-            </option>
-          ))}
-        </select>
-      )}
+        {courses.map((course, i) => (
+          <option value={course} key={i}>
+            {course}
+          </option>
+        ))}
+      </select>
 
       {filteredReviews.map((review, i) => (
         <Review review={review} key={i} />
