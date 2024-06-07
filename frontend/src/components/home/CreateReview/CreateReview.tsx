@@ -65,7 +65,7 @@ export default function CreateReview({ courses, close }: CreateReviewProps) {
               </option>
             ))}
              <option value={ADD_NEW_COURSE} key={"AddNew"}>
-                Add New Course
+                {ADD_NEW_COURSE}
               </option>
           </select>
         </div>

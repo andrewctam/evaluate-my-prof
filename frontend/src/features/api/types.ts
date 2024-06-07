@@ -4,10 +4,15 @@ export interface LoginRegisterPayload {
     password: string;
     email?: string | undefined;
 }
-export type LoginRegisterResponse = {
+export interface LoginRegisterResponse {
     username: string;
     sessionToken: string;
-};
+}
+
+export interface AddProfessorPayload {
+    schoolName: string
+    profName: string
+}
 
 export interface AddReviewPayload {
     authorUsername: string,

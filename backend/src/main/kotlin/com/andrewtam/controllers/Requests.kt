@@ -31,3 +31,8 @@ class DeleteReviewRequest(
     val sessionToken: String,
     val reviewId: String
 )
+
+class AddProfessorRequest(
+    val schoolName: String,
+    val profName: String
+)

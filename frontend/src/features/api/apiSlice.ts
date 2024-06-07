@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Review } from "../reviews/reviewsSlice";
 import {
+  AddProfessorPayload,
   AddReviewPayload,
   CommentPayload,
   DeleteReviewPayload,
@@ -16,7 +17,7 @@ const baseUrl = import.meta.env.DEV
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({ baseUrl }),
-  tagTypes: ["Review"],
+  tagTypes: ["Review", "Professors"],
   endpoints: (builder) => ({
     getReviews: builder.query<Review[], void>({
       query: () => "/reviews/all",
@@ -35,6 +36,18 @@ export const apiSlice = createApi({
         method: "POST",
         body,
       }),
+    }),
+    getProfessors: builder.query<string[], string>({
+      query: (schoolName) => `/schools/getProfessors?schoolName=${schoolName}`,
+      providesTags: ["Professors"]
+    }),
+    addProfessor: builder.mutation<string, AddProfessorPayload>({
+      query: (body) => ({
+        url: "/schools/addProfessor",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Professors"]
     }),
     addReview: builder.mutation<string, AddReviewPayload>({
       query: (body) => ({
@@ -74,6 +87,8 @@ export const apiSlice = createApi({
 export const {
   useGetReviewsQuery,
   useLoginMutation,
+  useGetProfessorsQuery,
+  useAddProfessorMutation,
   useAddReviewMutation,
   useRegisterMutation,
   useAddCommentMutation,
