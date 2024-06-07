@@ -29,7 +29,7 @@ export default function Home() {
           <Link to="/create-review">Create Review</Link>
         </div>
         {creating ? (
-          <CreateReview />
+          <CreateReview close={() => setCreating(false)} />
         ) : (
           reviews?.map((review, i) => <Review review={review} key={i} />)
         )}

@@ -8,7 +8,10 @@ import { useNavigate } from "react-router-dom";
 
 const courses = ["CSE 114", "CSE 214", "CSE 320"];
 
-export default function CreateReview() {
+interface CreateReviewProps {
+  close: () => void;
+}
+export default function CreateReview({close}: CreateReviewProps) {
   const [rating, setRating] = useState(3);
   const [difficulty, setDifficulty] = useState(3);
   const [amountLearned, setAmountLearned] = useState(3);
@@ -20,7 +23,6 @@ export default function CreateReview() {
   const user = useAppSelector((state) => state.user);
 
   const [addReview, { isLoading }] = useAddReviewMutation();
-  const navigate = useNavigate();
 
   const handleAddReview = async () => {
     if (isLoading || user.sessionToken === null) {
@@ -40,7 +42,7 @@ export default function CreateReview() {
 
     try {
       await addReview(payload).unwrap();
-      navigate("/");
+      close();
     } catch (error) {
       console.error(error);
     }
