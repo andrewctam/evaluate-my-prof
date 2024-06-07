@@ -30,3 +30,15 @@ cd backend
 chmod +x gradlew # if permission is denied
 ./gradlew bootRun
 ```
+
+## Deployment
+To build and deploy the frontend:
+```shell
+npm run build
+firebase deploy
+```
+
+To build a jar for the backend:
+```shell
+./gradlew bootJar
+```

@@ -1,12 +1,10 @@
 import { useState } from "react";
 import "./Login.scss";
-import { useAppDispatch } from "../../../app/hooks";
+
 import { useLoginMutation, useRegisterMutation } from "../../../features/api/apiSlice";
 import { LoginRegisterPayload } from "../../../features/api/types";
 
 export default function Login() {
-  const dispatch = useAppDispatch();
-
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
