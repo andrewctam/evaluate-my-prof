@@ -4,14 +4,11 @@ import { useAppSelector } from "../../../app/hooks";
 import { AddReviewPayload } from "../../../features/api/types";
 import { useAddReviewMutation } from "../../../features/api/apiSlice";
 
-import { useNavigate } from "react-router-dom";
-
-const courses = ["CSE 114", "CSE 214", "CSE 320"];
-
 interface CreateReviewProps {
+  courses: string[];
   close: () => void;
 }
-export default function CreateReview({close}: CreateReviewProps) {
+export default function CreateReview({ courses, close }: CreateReviewProps) {
   const [rating, setRating] = useState(3);
   const [difficulty, setDifficulty] = useState(3);
   const [amountLearned, setAmountLearned] = useState(3);
@@ -20,9 +17,12 @@ export default function CreateReview({close}: CreateReviewProps) {
   const [course, setCourse] = useState(courses[0]);
   const [text, setText] = useState("");
 
-  const user = useAppSelector((state) => state.user);
+  const [newCourse, setNewCourse] = useState("");
 
+  const user = useAppSelector((state) => state.user);
   const [addReview, { isLoading }] = useAddReviewMutation();
+
+  const ADD_NEW_COURSE = "Add New Course";
 
   const handleAddReview = async () => {
     if (isLoading || user.sessionToken === null) {
@@ -32,7 +32,7 @@ export default function CreateReview({close}: CreateReviewProps) {
       authorUsername: user.username,
       sessionToken: user.sessionToken,
       text,
-      course,
+      course: course === ADD_NEW_COURSE ? newCourse : course,
       rating: rating.toString(),
       difficulty: difficulty.toString(),
       amountLearned: amountLearned.toString(),
@@ -63,8 +63,24 @@ export default function CreateReview({close}: CreateReviewProps) {
                 {course}
               </option>
             ))}
+             <option value={ADD_NEW_COURSE} key={"AddNew"}>
+                Add New Course
+              </option>
           </select>
         </div>
+
+        {course === ADD_NEW_COURSE && (
+          <div>
+            <input
+              type="text"
+              className="addCourseInput"
+              placeholder="Course Name"
+              value={newCourse}
+              onChange={(e) => setNewCourse(e.target.value)}
+            />
+          </div>
+        )}
+
 
         <InputSlider
           name={`Rating (${rating})`}
