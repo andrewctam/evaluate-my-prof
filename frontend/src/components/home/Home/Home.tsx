@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Layout from "../../layout/Layout";
 import "./Home.scss";
 import { schools } from "./schools";
@@ -8,6 +8,7 @@ import {
 } from "../../../features/api/apiSlice";
 import { useNavigate } from "react-router-dom";
 import { AddProfessorPayload } from "../../../features/api/types";
+import { useAppSelector } from "../../../app/hooks";
 
 export default function Home() {
   const [selectedSchool, setSelectedSchool] = useState("");
@@ -19,6 +20,9 @@ export default function Home() {
   const professors = useGetProfessorsQuery(selectedSchool);
   const [addProfessor, { isLoading }] = useAddProfessorMutation();
 
+  const user = useAppSelector(state => state.user);
+
+  const loggedIn = user.sessionToken !== null;
   const ADD_NEW_PROF = "Add New Professor";
 
   const canSubmit =
@@ -26,6 +30,16 @@ export default function Home() {
     selectedProf !== "" &&
     (selectedProf !== ADD_NEW_PROF || //either not adding a new prof
       (newProfName !== "" && newProfName !== ADD_NEW_PROF)); // or the new prof is a valid name
+
+  useEffect(() => {
+    if (!isLoading && selectedSchool !== "" && !loggedIn && professors.data?.length === 0) {
+      setError("No professors found for this school. Log in to add one!")
+    } else {
+      setError("");
+    }
+
+
+  }, [isLoading, selectedSchool, loggedIn, professors.data])
 
   const handleSubmit = async () => {
     if (!canSubmit) {
@@ -39,6 +53,8 @@ export default function Home() {
 
       try {
         const payload: AddProfessorPayload = {
+          username: user.username,
+          sessionToken: user.sessionToken,
           schoolName: selectedSchool,
           profName: newProfName,
         };
@@ -83,7 +99,7 @@ export default function Home() {
               </option>
             ))}
 
-            <option value={ADD_NEW_PROF}>{ADD_NEW_PROF}</option>
+            {loggedIn && (<option value={ADD_NEW_PROF}>{ADD_NEW_PROF}</option>)}
           </select>
 
           {selectedProf === ADD_NEW_PROF && (
@@ -101,6 +117,8 @@ export default function Home() {
               {selectedProf === ADD_NEW_PROF ? "Add Professor" : "View Reviews"}
             </button>
           )}
+
+          <div className="error">{error}</div>
         </div>
       </div>
     </Layout>

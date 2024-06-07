@@ -10,6 +10,8 @@ export interface LoginRegisterResponse {
 }
 
 export interface AddProfessorPayload {
+    username: string;
+    sessionToken: string;
     schoolName: string
     profName: string
 }

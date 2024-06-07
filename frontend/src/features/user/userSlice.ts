@@ -1,4 +1,4 @@
-import { PayloadAction, createSlice, isAnyOf } from "@reduxjs/toolkit";
+import { createSlice, isAnyOf } from "@reduxjs/toolkit";
 import { apiSlice } from "../api/apiSlice";
 
 export interface UserState {

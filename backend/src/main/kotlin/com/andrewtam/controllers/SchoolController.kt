@@ -11,7 +11,7 @@ import java.security.SecureRandom
 
 @RestController
 @RequestMapping("/schools")
-class SchoolController(@Autowired val schoolRepo: SchoolRepo) {
+class SchoolController(@Autowired val schoolRepo: SchoolRepo, @Autowired val userRepo: UserRepo) {
 
     @GetMapping("/getProfessors")
     fun getProfessors(@RequestParam schoolName: String): ResponseEntity<List<String>> {
@@ -25,6 +25,15 @@ class SchoolController(@Autowired val schoolRepo: SchoolRepo) {
 
     @PostMapping("/addProfessor")
     fun addProfessor(@RequestBody body: AddProfessorRequest): ResponseEntity<MessageResponse> {
+        val user = userRepo.findByUsername(body.username)
+
+        if (user == null) {
+            return ResponseEntity.badRequest().body(MessageResponse("User not found"))
+        }
+        if (!verifySessionToken(user, body.sessionToken)) {
+            return ResponseEntity.badRequest().body(MessageResponse("Invalid session token"))
+        }
+
         // potential edge case?
         if (body.profName == "Add New Professor")
             return ResponseEntity.badRequest().body(MessageResponse("Invalid professor name"))
