@@ -16,9 +16,11 @@ const baseUrl = import.meta.env.DEV
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({ baseUrl }),
+  tagTypes: ["Review"],
   endpoints: (builder) => ({
     getReviews: builder.query<Review[], void>({
       query: () => "/reviews/all",
+      providesTags: ["Review"]
     }),
     login: builder.mutation<LoginRegisterResponse, LoginRegisterPayload>({
       query: (body) => ({
@@ -40,6 +42,7 @@ export const apiSlice = createApi({
         method: "POST",
         body,
       }),
+      invalidatesTags: ["Review"]
     }),
     addComment: builder.mutation<string, CommentPayload>({
       query: (body) => ({
@@ -47,6 +50,7 @@ export const apiSlice = createApi({
         method: "POST",
         body,
       }),
+      invalidatesTags: ["Review"]
     }),
     addVote: builder.mutation<string, VotePayload>({
       query: (body) => ({
@@ -54,6 +58,7 @@ export const apiSlice = createApi({
         method: "POST",
         body,
       }),
+      invalidatesTags: ["Review"]
     }),
     deleteReview: builder.mutation<string, DeleteReviewPayload>({
       query: (body) => ({
@@ -61,6 +66,7 @@ export const apiSlice = createApi({
         method: "POST",
         body,
       }),
+      invalidatesTags: ["Review"]
     }),
   }),
 });

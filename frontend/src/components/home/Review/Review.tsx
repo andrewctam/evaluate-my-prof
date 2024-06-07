@@ -10,9 +10,8 @@ import { useAddCommentMutation, useAddVoteMutation, useDeleteReviewMutation } fr
 
 interface ReviewProps {
   review: ReviewType;
-  refreshParent: () => void;
 }
-export default function Review({ review, refreshParent }: ReviewProps) {
+export default function Review({ review }: ReviewProps) {
   const [addingComment, setAddingComment] = useState(false);
   const [commentText, setCommentText] = useState("");
 
@@ -34,7 +33,6 @@ export default function Review({ review, refreshParent }: ReviewProps) {
     
     try {
       await addVote(body).unwrap();
-      refreshParent();
     } catch (error) {
       console.error(error);
     }
@@ -55,7 +53,6 @@ export default function Review({ review, refreshParent }: ReviewProps) {
       await addComment(body).unwrap();
       setCommentText("");
       setAddingComment(false);
-      refreshParent();
     } catch (error) {
       console.error(error);
     }
@@ -74,7 +71,6 @@ export default function Review({ review, refreshParent }: ReviewProps) {
 
     try {
       await deleteReview(payload).unwrap();
-      refreshParent();
     } catch (error) {
       console.error(error);
     }

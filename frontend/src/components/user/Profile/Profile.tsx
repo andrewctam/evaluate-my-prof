@@ -11,7 +11,7 @@ export default function Profile() {
   const params = useParams();
   const username = params?.username ?? "";
 
-  const { reviews, refetch } = useGetReviewsQuery(undefined, {
+  const { reviews } = useGetReviewsQuery(undefined, {
     selectFromResult: ({data}) => ({
       reviews: data?.filter((review: ReviewType) => review.authorName === username)
     })
@@ -38,7 +38,7 @@ export default function Profile() {
       </div>
       <div className="feed">
         {reviews.map((review, i) => (
-          <Review key={i} review={review} refreshParent={refetch} />
+          <Review key={i} review={review} />
         ))}
       </div>
     </div>

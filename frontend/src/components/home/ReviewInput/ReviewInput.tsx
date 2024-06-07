@@ -8,11 +8,7 @@ import { useAddReviewMutation } from "../../../features/api/apiSlice";
 
 const courses = ["CSE 114", "CSE 214", "CSE 320"];
 
-interface ReviewInputProps {
-  refreshParent: () => void;
-}
-
-export default function ReviewInput({ refreshParent }: ReviewInputProps) {
+export default function ReviewInput() {
   const [rating, setRating] = useState(3);
   const [difficulty, setDifficulty] = useState(3);
   const [amountLearned, setAmountLearned] = useState(3);
@@ -43,7 +39,6 @@ export default function ReviewInput({ refreshParent }: ReviewInputProps) {
 
     try {
       await addReview(payload).unwrap();
-      refreshParent();
       setText("");
       setRating(3);
       setDifficulty(3);
