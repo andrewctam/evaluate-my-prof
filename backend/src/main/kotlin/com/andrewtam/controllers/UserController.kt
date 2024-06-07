@@ -23,7 +23,7 @@ fun generateSessionToken(): String {
 class UserController(@Autowired val userRepo: UserRepo, @Autowired val reviewRepo: ReviewRepo) {
 
     @PostMapping("/register")
-    fun register(@RequestBody body: RegisterRequest): ResponseEntity<MessageResponse> {
+    fun register(@RequestBody body: RegisterRequest): ResponseEntity<LoginRegisterResponse> {
         if (userRepo.findByUsername(body.username) != null || userRepo.findByEmail(body.email) != null) {
             return ResponseEntity.badRequest().build()
         }
@@ -39,11 +39,11 @@ class UserController(@Autowired val userRepo: UserRepo, @Autowired val reviewRep
 
         userRepo.insert(user)
 
-        return ResponseEntity.ok(MessageResponse(sessionToken))
+        return ResponseEntity.ok(LoginRegisterResponse(body.username, sessionToken))
     }
 
     @PostMapping("/login")
-    fun login(@RequestBody body: LoginRequest): ResponseEntity<MessageResponse> {
+    fun login(@RequestBody body: LoginRequest): ResponseEntity<LoginRegisterResponse> {
         val user = userRepo.findByUsername(body.username)
 
         if (user == null) {
@@ -62,6 +62,6 @@ class UserController(@Autowired val userRepo: UserRepo, @Autowired val reviewRep
 
         userRepo.save(user)
 
-        return ResponseEntity.ok(MessageResponse(sessionToken))
+        return ResponseEntity.ok(LoginRegisterResponse(body.username, sessionToken))
     }
 }

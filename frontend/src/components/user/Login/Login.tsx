@@ -1,10 +1,8 @@
 import { useState } from "react";
-import axios from "axios";
-import { API_URL } from "../../../types/constants";
-
 import "./Login.scss";
 import { useAppDispatch } from "../../../app/hooks";
-import { login } from "../../../features/user/userSlice";
+import { useLoginMutation, useRegisterMutation } from "../../../features/api/apiSlice";
+import { LoginRegisterPayload } from "../../../features/api/types";
 
 export default function Login() {
   const dispatch = useAppDispatch();
@@ -15,9 +13,16 @@ export default function Login() {
   const [registering, setRegistering] = useState(false);
   const [error, setError] = useState("");
 
+  const [login, {isLoading: loginIsLoading}] = useLoginMutation();
+  const [register, {isLoading: registerIsLoading}] = useRegisterMutation();
+  
   const loginRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    if (loginIsLoading || registerIsLoading) {
+      return;
+    }
+
     if (registering) {
       if (email === "") {
         setError("Please enter an email");
@@ -40,32 +45,27 @@ export default function Login() {
       setError("Please enter a password");
       return;
     }
-    const action = registering ? "register" : "login";
-    const url = `${API_URL}/users/${action}`;
 
-    const body = JSON.stringify({
+    const body: LoginRegisterPayload = {
       username,
       password,
       email: registering ? email : undefined,
-    });
-    const config = {
-      headers: {
-        "Content-Type": "application/json"
-      },
     };
 
-    await axios
-      .post(url, body, config)
-      .then((response) => {
-        console.log(response);
-        dispatch(login({
-          username,
-          sessionToken: response.data.message
-        }));
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    try {
+      if (registering) {
+        await register(body).unwrap();
+      } else {
+        await login(body).unwrap();
+      }
+
+      setError("");
+
+      
+    } catch (err) {
+      setError("Error.");
+      return;
+    }
   };
 
   return (

@@ -1,93 +1,93 @@
 import { useState } from "react";
 
 import "./Review.scss";
-import {
-  Comment as CommentType,
-  Review as ReviewType,
-} from "../../../types/review-types";
 import { Link } from "react-router-dom";
-import axios from "axios";
-import { API_URL } from "../../../types/constants";
 import moment from "moment";
 import { useAppSelector } from "../../../app/hooks";
+import { Comment as CommentType, Review as ReviewType } from "../../../features/reviews/reviewsSlice";
+import { CommentPayload, DeleteReviewPayload, VotePayload } from "../../../features/api/types";
+import { useAddCommentMutation, useAddVoteMutation, useDeleteReviewMutation } from "../../../features/api/apiSlice";
 
 interface ReviewProps {
   review: ReviewType;
   refreshParent: () => void;
 }
-
 export default function Review({ review, refreshParent }: ReviewProps) {
   const [addingComment, setAddingComment] = useState(false);
   const [commentText, setCommentText] = useState("");
 
   const user = useAppSelector(state => state.user);
+  const [addVote, {isLoading: voteIsLoading}] = useAddVoteMutation();
+  const [addComment, {isLoading: commentIsLoading}] = useAddCommentMutation();
+  const [deleteReview, {isLoading: deleteIsLoading}] = useDeleteReviewMutation();
 
-  const addCommentOrVote = async (action: "vote" | "comment", change?: 1 | -1) => {
-    if (user.sessionToken === null) {
+  const handleAddVote = async (change: 1 | -1) => {
+    if (voteIsLoading || user.sessionToken === null) {
       return;
     }
-    const url = `${API_URL}/reviews/${action}`;
-    const body = JSON.stringify({
+    const body: VotePayload = {
       authorUsername: user.username,
       sessionToken: user.sessionToken,
-      reviewId: review.id,
-      text: action === "comment" ? commentText : undefined,
-      vote: action === "vote" ? change : undefined
-    })
-    const config = { 
-      headers: {
-        "Content-Type": "application/json"
-      }
+      reviewId: review.id.toString(),
+      vote: change
     }
-    await axios.post(url, body, config)
-    .then((response) => {
-      console.log(response);
-      if (action === "comment") {
-        setCommentText("");
-        setAddingComment(false);
-      }
+    
+    try {
+      await addVote(body).unwrap();
       refreshParent();
-    })
-    .catch((error) => {
+    } catch (error) {
       console.error(error);
-    });
+    }
   };
 
-  const deleteReview = async () => {
-    if (user.sessionToken === null ||
+  const handleAddComment = async () => {
+    if (commentIsLoading || user.sessionToken === null) {
+      return;
+    }
+    const body: CommentPayload = {
+      authorUsername: user.username,
+      sessionToken: user.sessionToken,
+      reviewId: review.id.toString(),
+      text: commentText
+    }
+    
+    try {
+      await addComment(body).unwrap();
+      setCommentText("");
+      setAddingComment(false);
+      refreshParent();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDeleteReview = async () => {
+    if (deleteIsLoading || user.sessionToken === null ||
         !window.confirm("Are you sure you want to delete this review?")) {
       return;
     }
-
-    const url = `${API_URL}/reviews/delete`;
-    const body = JSON.stringify({
+    const payload: DeleteReviewPayload = {
       authorUsername: user.username,
       sessionToken: user.sessionToken,
-      reviewId: review.id
-    })
-    const config = { 
-      headers: {
-        "Content-Type": "application/json"
-      }
+      reviewId: review.id.toString()
     }
-    await axios.post(url, body, config)
-    .then((response) => {
-      console.log(response);
+
+    try {
+      await deleteReview(payload).unwrap();
       refreshParent();
-    })
-    .catch((error) => {
+    } catch (error) {
       console.error(error);
-    });
+    }
   }
 
   return (
     <div className="review">
       <div className="vote">
-        <div className="arrow" onClick={() => addCommentOrVote("vote", 1)}>
+        <div className="arrow" onClick={() => handleAddVote(1)}>
           ▲
         </div>
         <div>{review.votes}</div>
-        <div className="arrow" onClick={() => addCommentOrVote("vote", -1)}>
+        <div className="arrow" onClick={() => handleAddVote(-1)}>
           ▼
         </div>
       </div>
@@ -124,7 +124,7 @@ export default function Review({ review, refreshParent }: ReviewProps) {
             onChange={(e) => setCommentText(e.target.value)}
           />
 
-          <button onClick={() => addCommentOrVote("comment")}>Post</button>
+          <button onClick={handleAddComment}>Post</button>
         </>
       )}
 
@@ -136,7 +136,7 @@ export default function Review({ review, refreshParent }: ReviewProps) {
       </div>
 
       {user.username === review.authorName && (
-        <div onClick={deleteReview}>
+        <div onClick={handleDeleteReview}>
           <TrashCan />
         </div>
       )}

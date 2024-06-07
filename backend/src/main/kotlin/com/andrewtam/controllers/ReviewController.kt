@@ -24,18 +24,6 @@ class ReviewController(@Autowired val userRepo: UserRepo, @Autowired val reviewR
         return reviewRepo.findAllByOrderByCreatedDesc()
     }
 
-    @GetMapping("/user/{username}")
-    fun getUserReviews(@PathVariable("username") username: String): ResponseEntity<ProfileResponse>{
-        val user = userRepo.findByUsername(username)
-
-        if (user == null) {
-            return ResponseEntity.notFound().build()
-        }
-
-        val reviews = reviewRepo.findByAuthor(user.id)
-        return ResponseEntity.ok(ProfileResponse(reviews))
-    }
-
     @PostMapping("/create")
     fun createReview(@RequestBody body: CreateReviewRequest) : ResponseEntity<MessageResponse> {
         val user = userRepo.findByUsername(body.authorUsername)

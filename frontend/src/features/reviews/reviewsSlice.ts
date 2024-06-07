@@ -19,3 +19,4 @@ export interface Review {
     votes: number;
     comments: Comment[];
 }
+

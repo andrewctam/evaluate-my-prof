@@ -1,4 +1,4 @@
 package com.andrewtam
 
-class ProfileResponse(val reviews: List<Review>)
+class LoginRegisterResponse(val username: String, val sessionToken: String)
 class MessageResponse(val message: String)

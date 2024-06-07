@@ -1,9 +1,9 @@
 
 import "./ReviewInput.scss";
-import axios from "axios";
-import { API_URL } from "../../../types/constants";
 import { useState } from "react";
 import { useAppSelector } from "../../../app/hooks";
+import { AddReviewPayload } from "../../../features/api/types";
+import { useAddReviewMutation } from "../../../features/api/apiSlice";
 
 
 const courses = ["CSE 114", "CSE 214", "CSE 320"];
@@ -23,45 +23,38 @@ export default function ReviewInput({ refreshParent }: ReviewInputProps) {
 
   const user = useAppSelector(state => state.user);
 
-  const addReview = async () => {
-    if (user.sessionToken === null) {
+  const [addReview, {isLoading}] = useAddReviewMutation();
+
+  const handleAddReview = async () => {
+    if (isLoading || user.sessionToken === null) {
       return;
     }
-    const url = `${API_URL}/reviews/create`;
-    const body = JSON.stringify({
+    const payload: AddReviewPayload = {
       authorUsername: user.username,
       sessionToken: user.sessionToken,
       text,
       course,
-      rating,
-      difficulty,
-      amountLearned,
-      lectureQuality,
-      hrsPerWeek
-    })
-    const config = { 
-      headers: {
-        "Content-Type": "application/json"
-      }
+      rating: rating.toString(),
+      difficulty: difficulty.toString(),
+      amountLearned: amountLearned.toString(),
+      lectureQuality: lectureQuality.toString(),
+      hrsPerWeek: hrsPerWeek.toString()
     }
 
-    await axios.post(url, body, config)
-    .then((response) => {
-      console.log(response);
+    try {
+      await addReview(payload).unwrap();
+      refreshParent();
+      setText("");
       setRating(3);
       setDifficulty(3);
       setAmountLearned(3);
       setLectureQuality(3);
       setHrsPerWeek(5);
-      setText("");
-      
-      refreshParent();
-    })
-    .catch((error) => {
+      setCourse(courses[0]);
+    } catch (error) {
       console.error(error);
-    });
+    }
   };
-
 
   return (
     <div className="reviewInput">
@@ -109,7 +102,7 @@ export default function ReviewInput({ refreshParent }: ReviewInputProps) {
 
       <div>
         <textarea value={text} onChange={(e) => setText(e.target.value)} />
-        <button onClick={addReview}>Create Review</button>
+        <button onClick={handleAddReview}>Create Review</button>
       </div>
     </div>
   );

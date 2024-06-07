@@ -1,47 +1,33 @@
 import { useParams } from "react-router-dom";
-import Layout from "../../layout/Layout";
-import { useEffect, useMemo, useState } from "react";
+
+import { useMemo } from "react";
 import Review from "../../home/Review/Review";
 import "./Profile.scss";
-import { Review as ReviewType } from "../../../types/review-types";
-import axios from "axios";
-import { API_URL } from "../../../types/constants";
-import { useAppSelector } from "../../../app/hooks";
+import { useGetReviewsQuery } from "../../../features/api/apiSlice";
+import { Review as ReviewType } from "../../../features/reviews/reviewsSlice";
+import Layout from "../../layout/Layout";
 
 export default function Profile() {
   const params = useParams();
-  const username = params?.username;
-  const user = useAppSelector(state => state.user);
+  const username = params?.username ?? "";
 
-  const [reviews, setReviews] = useState<ReviewType[]>([]);
-  
-  const getProfile = async () => {
-    if (user.sessionToken === null) {
-      return;
-    }
-    const url = `${API_URL}/reviews/user/${username}`;
-
-    await axios.get(url)
-    .then((response) => {
-      console.log(response);
-      setReviews(response.data.reviews);
+  const { reviews, refetch } = useGetReviewsQuery(undefined, {
+    selectFromResult: ({data}) => ({
+      reviews: data?.filter((review: ReviewType) => review.authorName === username)
     })
-    .catch((error) => {
-      console.error(error);
-    });
-  };
-
-  useEffect(() => {
-    getProfile();
-  }, [])
-
+  });
+  
   const score = useMemo(() => {
-    const sum = reviews.reduce((acc: number, review: ReviewType) => {
+    console.log(reviews)
+    const sum = reviews?.reduce((acc: number, review: ReviewType ) => {
       return acc + review.rating;
-    }, 0);  
+    }, 0);
 
     return sum;
   }, [reviews])
+
+  if (!reviews)
+    return null;
 
   return <Layout>
     <div className="profile">
@@ -52,7 +38,7 @@ export default function Profile() {
       </div>
       <div className="feed">
         {reviews.map((review, i) => (
-          <Review key={i} review={review} refreshParent={getProfile} />
+          <Review key={i} review={review} refreshParent={refetch} />
         ))}
       </div>
     </div>
