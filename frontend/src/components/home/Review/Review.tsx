@@ -10,8 +10,9 @@ import { useAddCommentMutation, useAddVoteMutation, useDeleteReviewMutation } fr
 
 interface ReviewProps {
   review: ReviewType;
+  showProfSchool?: boolean;
 }
-export default function Review({ review }: ReviewProps) {
+export default function Review({ review, showProfSchool }: ReviewProps) {
   const [addingComment, setAddingComment] = useState(false);
   const [commentText, setCommentText] = useState("");
 
@@ -95,6 +96,18 @@ export default function Review({ review }: ReviewProps) {
         <span>{"'s review of "}</span>
         <span className="course">{review.course}</span>
         <span>{` on ${moment(review.created).format("h:mm a, MMMM Do, YYYY ")}`}</span>
+        {showProfSchool && (
+          <>
+          <span>{" at "}</span>
+          <div className="profSchool">
+            <Link to={`/reviews/${review.schoolName}/${review.profName}`}>
+              <span className="school">{review.schoolName}</span>
+              <span>{" with "}</span>
+              <span className="prof">{review.profName}</span>
+            </Link>
+          </div>
+          </>
+        )}
       </div>
 
       <div className="boxes">

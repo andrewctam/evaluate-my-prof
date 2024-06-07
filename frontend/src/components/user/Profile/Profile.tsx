@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useMemo } from "react";
 import Review from "../../home/Review/Review";
 import "./Profile.scss";
-import { useGetReviewsQuery } from "../../../features/api/apiSlice";
+import { useGetFileteredReviewsQuery, useGetReviewsQuery } from "../../../features/api/apiSlice";
 import { Review as ReviewType } from "../../../features/reviews/reviewsSlice";
 import Layout from "../../layout/Layout";
 
@@ -11,10 +11,10 @@ export default function Profile() {
   const params = useParams();
   const username = params?.username ?? "";
 
-  const { reviews } = useGetReviewsQuery(undefined, {
-    selectFromResult: ({data}) => ({
-      reviews: data?.filter((review: ReviewType) => review.authorName === username)
-    })
+  const { data: reviews } = useGetFileteredReviewsQuery({
+    authorName: username,
+    profName: "",
+    schoolName: "",
   });
   
   const score = useMemo(() => {
@@ -38,7 +38,7 @@ export default function Profile() {
       </div>
       <div className="feed">
         {reviews.map((review, i) => (
-          <Review key={i} review={review} />
+          <Review key={i} review={review} showProfSchool />
         ))}
       </div>
     </div>

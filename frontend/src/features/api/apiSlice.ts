@@ -5,6 +5,7 @@ import {
   AddReviewPayload,
   CommentPayload,
   DeleteReviewPayload,
+  FileteredReviewsPayload,
   LoginRegisterPayload,
   LoginRegisterResponse,
   VotePayload,
@@ -21,6 +22,14 @@ export const apiSlice = createApi({
   endpoints: (builder) => ({
     getReviews: builder.query<Review[], void>({
       query: () => "/reviews/all",
+      providesTags: ["Review"]
+    }),
+    getFileteredReviews: builder.query<Review[], FileteredReviewsPayload>({
+      query: (body) => ({
+        url: "/reviews/filter",
+        method: "POST",
+        body,
+      }),
       providesTags: ["Review"]
     }),
     login: builder.mutation<LoginRegisterResponse, LoginRegisterPayload>({
@@ -86,6 +95,7 @@ export const apiSlice = createApi({
 
 export const {
   useGetReviewsQuery,
+  useGetFileteredReviewsQuery,
   useLoginMutation,
   useGetProfessorsQuery,
   useAddProfessorMutation,

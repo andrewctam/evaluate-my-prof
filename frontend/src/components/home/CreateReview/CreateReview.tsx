@@ -6,9 +6,16 @@ import { useAddReviewMutation } from "../../../features/api/apiSlice";
 
 interface CreateReviewProps {
   courses: string[];
+  schoolName: string;
+  profName: string;
   close: () => void;
 }
-export default function CreateReview({ courses, close }: CreateReviewProps) {
+export default function CreateReview({
+  courses,
+  schoolName,
+  profName,
+  close,
+}: CreateReviewProps) {
   const [rating, setRating] = useState(3);
   const [difficulty, setDifficulty] = useState(3);
   const [amountLearned, setAmountLearned] = useState(3);
@@ -31,6 +38,8 @@ export default function CreateReview({ courses, close }: CreateReviewProps) {
     const payload: AddReviewPayload = {
       authorUsername: user.username,
       sessionToken: user.sessionToken,
+      schoolName,
+      profName,
       text,
       course: course === ADD_NEW_COURSE ? newCourse : course,
       rating: rating.toString(),
@@ -64,9 +73,9 @@ export default function CreateReview({ courses, close }: CreateReviewProps) {
                 {course}
               </option>
             ))}
-             <option value={ADD_NEW_COURSE} key={"AddNew"}>
-                {ADD_NEW_COURSE}
-              </option>
+            <option value={ADD_NEW_COURSE} key={"AddNew"}>
+              {ADD_NEW_COURSE}
+            </option>
           </select>
         </div>
 
@@ -81,7 +90,6 @@ export default function CreateReview({ courses, close }: CreateReviewProps) {
             />
           </div>
         )}
-
 
         <InputSlider
           name={`Rating (${rating})`}

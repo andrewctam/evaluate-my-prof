@@ -13,10 +13,16 @@ export interface AddProfessorPayload {
     schoolName: string
     profName: string
 }
-
+export interface FileteredReviewsPayload {
+    authorName: string
+    schoolName: string
+    profName: string
+}
 export interface AddReviewPayload {
     authorUsername: string,
     sessionToken: string,
+    schoolName: string,
+    profName: string,
     text: string,
     course: string,
     rating: string,

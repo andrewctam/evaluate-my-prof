@@ -1,7 +1,7 @@
 import "./ProfessorPage.scss";
 import Review from "../Review/Review";
 import Layout from "../../layout/Layout";
-import { useGetReviewsQuery } from "../../../features/api/apiSlice";
+import { useGetFileteredReviewsQuery } from "../../../features/api/apiSlice";
 import { useMemo, useState } from "react";
 import CreateReview from "../CreateReview/CreateReview";
 import { useAppSelector } from "../../../app/hooks";
@@ -10,13 +10,18 @@ import { useParams } from "react-router-dom";
 export default function ProfessorPage() {
   const params = useParams();
   const profName = params?.profName;
-  const school = params?.school;
+  const schoolName = params?.schoolName;
 
-  if (!profName || !school) {
+  if (!profName || !schoolName) {
     return null;
   }
 
-  const { data: reviews } = useGetReviewsQuery();
+  const { data: reviews } = useGetFileteredReviewsQuery({
+    authorName: "",
+    profName,
+    schoolName,
+  });
+  
   const user = useAppSelector((state) => state.user);
 
   const [creating, setCreating] = useState(false);
@@ -31,13 +36,14 @@ export default function ProfessorPage() {
 
     const arr = Array.from(courseSet);
     arr.sort();
+    arr.unshift("");
     return arr;
   }, [reviews]);
 
   return (
     <Layout>
       <div className="feed">
-        <h1>{`${profName} from ${school}`}</h1>
+        <h1>{`${profName} from ${schoolName}`}</h1>
 
         {user.sessionToken !== null && (
           <button
@@ -49,7 +55,12 @@ export default function ProfessorPage() {
         )}
 
         {creating ? (
-          <CreateReview close={() => setCreating(false)} courses={courses} />
+          <CreateReview
+            close={() => setCreating(false)}
+            schoolName={schoolName}
+            profName={profName}
+            courses={courses}
+          />
         ) : (
           reviews?.map((review, i) => <Review review={review} key={i} />)
         )}

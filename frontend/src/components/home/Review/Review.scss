@@ -43,6 +43,13 @@
         right: 5px;
         cursor: pointer;
     }
+
+    .profSchool {
+        display: inline-block;
+        span {
+            color: blue;
+        }
+    }
 }
 
 .boxes {

@@ -16,6 +16,9 @@ data class Review(
 
     @JsonSerialize(using= ToStringSerializer::class)
     var author: ObjectId,
+
+    var schoolName: String,
+    var profName: String,
     
     var authorName: String,
     var course: String,

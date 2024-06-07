@@ -8,6 +8,8 @@ export interface Review {
     id: number;
     author: string; //objectId
     authorName: string;
+    profName: string;
+    schoolName: string;
     course: string;
     rating: number;
     difficulty: number;
