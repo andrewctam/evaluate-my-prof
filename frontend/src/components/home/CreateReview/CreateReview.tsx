@@ -1,14 +1,14 @@
-
-import "./ReviewInput.scss";
+import "./CreateReview.scss";
 import { useState } from "react";
 import { useAppSelector } from "../../../app/hooks";
 import { AddReviewPayload } from "../../../features/api/types";
 import { useAddReviewMutation } from "../../../features/api/apiSlice";
 
+import { useNavigate } from "react-router-dom";
 
 const courses = ["CSE 114", "CSE 214", "CSE 320"];
 
-export default function ReviewInput() {
+export default function CreateReview() {
   const [rating, setRating] = useState(3);
   const [difficulty, setDifficulty] = useState(3);
   const [amountLearned, setAmountLearned] = useState(3);
@@ -17,9 +17,10 @@ export default function ReviewInput() {
   const [course, setCourse] = useState(courses[0]);
   const [text, setText] = useState("");
 
-  const user = useAppSelector(state => state.user);
+  const user = useAppSelector((state) => state.user);
 
-  const [addReview, {isLoading}] = useAddReviewMutation();
+  const [addReview, { isLoading }] = useAddReviewMutation();
+  const navigate = useNavigate();
 
   const handleAddReview = async () => {
     if (isLoading || user.sessionToken === null) {
@@ -34,18 +35,12 @@ export default function ReviewInput() {
       difficulty: difficulty.toString(),
       amountLearned: amountLearned.toString(),
       lectureQuality: lectureQuality.toString(),
-      hrsPerWeek: hrsPerWeek.toString()
-    }
+      hrsPerWeek: hrsPerWeek.toString(),
+    };
 
     try {
       await addReview(payload).unwrap();
-      setText("");
-      setRating(3);
-      setDifficulty(3);
-      setAmountLearned(3);
-      setLectureQuality(3);
-      setHrsPerWeek(5);
-      setCourse(courses[0]);
+      navigate("/");
     } catch (error) {
       console.error(error);
     }
@@ -53,18 +48,20 @@ export default function ReviewInput() {
 
   return (
     <div className="reviewInput">
-      <div className = "">
+      <div className="">
         <div>
           <label htmlFor="courseselect">Course:</label>
-            <select
-                id="courseselect"
-                value={course}
-                onChange={(e) => setCourse(e.target.value)}
-            >
-                {courses.map((course, i) => (
-                    <option value={course} key={i}>{course}</option>
-                ))}
-            </select>
+          <select
+            id="courseselect"
+            value={course}
+            onChange={(e) => setCourse(e.target.value)}
+          >
+            {courses.map((course, i) => (
+              <option value={course} key={i}>
+                {course}
+              </option>
+            ))}
+          </select>
         </div>
 
         <InputSlider
