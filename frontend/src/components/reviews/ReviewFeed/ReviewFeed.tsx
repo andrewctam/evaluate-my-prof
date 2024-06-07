@@ -1,5 +1,5 @@
 import "./ReviewFeed.scss";
-import Review from "../Review/Review";
+import Review from "../../reviews/Review/Review";
 import { useMemo, useState } from "react";
 import { Review as ReviewType } from "../../../features/reviews/reviewsSlice";
 

@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 
 import { useMemo } from "react";
-import Review from "../../home/Review/Review";
+import Review from "../../reviews/Review/Review";
 import "./Profile.scss";
 import { useGetFileteredReviewsQuery } from "../../../features/api/apiSlice";
 import { Review as ReviewType } from "../../../features/reviews/reviewsSlice";

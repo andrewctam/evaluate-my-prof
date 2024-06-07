@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import Layout from "../../layout/Layout";
+import Layout from "../layout/Layout";
 import "./Home.scss";
 import { schools } from "./schools";
 import {
   useAddProfessorMutation,
   useGetProfessorsQuery,
-} from "../../../features/api/apiSlice";
+} from "../../features/api/apiSlice";
 import { useNavigate } from "react-router-dom";
-import { AddProfessorPayload } from "../../../features/api/types";
-import { useAppSelector } from "../../../app/hooks";
+import { AddProfessorPayload } from "../../features/api/types";
+import { useAppSelector } from "../../app/hooks";
 
 export default function Home() {
   const [selectedSchool, setSelectedSchool] = useState("");

@@ -2,9 +2,9 @@ import "./ProfessorPage.scss";
 import Layout from "../../layout/Layout";
 import { useGetFileteredReviewsQuery } from "../../../features/api/apiSlice";
 import { useMemo, useState } from "react";
-import CreateReview from "../CreateReview/CreateReview";
 import { useAppSelector } from "../../../app/hooks";
 import { useParams } from "react-router-dom";
+import CreateReview from "../CreateReview/CreateReview";
 import ReviewFeed from "../ReviewFeed/ReviewFeed";
 
 export default function ProfessorPage() {
