@@ -22,9 +22,9 @@
     margin-right: auto;
     padding: 20px;
     width: fit-content;
-    border: 1px solid black;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    background-color: rgba(205, 229, 231, 0.4);
     border-radius: 20px;
-    background-color: rgb(205, 229, 231);
 
 
     .schoolSelect, .profSelect {
@@ -45,9 +45,6 @@
         min-width: 200px;
     }
 
-    select:disabled {
-        background-color: rgb(101, 99, 99);
-    }
 
     .submit {
         margin-top: 40px;
