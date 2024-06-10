@@ -64,4 +64,23 @@ class UserController(@Autowired val userRepo: UserRepo, @Autowired val reviewRep
 
         return ResponseEntity.ok(LoginRegisterResponse(body.username, sessionToken))
     }
+
+    @PostMapping("/checkSession")
+    fun checkSession(@RequestBody body: CheckSessionRequest): ResponseEntity<Boolean> {
+        val user = userRepo.findByUsername(body.username);
+
+        if (user == null) {
+            return ResponseEntity.ok(false);
+        }
+
+        val valid = verifySessionToken(user, body.sessionToken);
+        if (!valid) {
+            user.sessionTokenHash = "";
+            user.sessionExpiration = Date(0);
+            userRepo.save(user);
+        }
+
+        return ResponseEntity.ok(valid);
+    }
+
 }

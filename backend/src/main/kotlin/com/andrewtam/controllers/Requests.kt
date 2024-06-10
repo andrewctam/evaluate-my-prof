@@ -2,6 +2,7 @@ package com.andrewtam
 
 class LoginRequest(val username: String, val password: String)
 class RegisterRequest(val username: String, val password: String, val email: String)
+class CheckSessionRequest(val username: String, val sessionToken: String)
 
 class FilteredReviewsRequest(
     val authorName: String,

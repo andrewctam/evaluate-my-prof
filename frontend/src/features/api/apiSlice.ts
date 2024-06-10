@@ -46,6 +46,13 @@ export const apiSlice = createApi({
         body,
       }),
     }),
+    checkSession: builder.mutation<boolean, LoginRegisterResponse>({
+      query: (body) => ({
+        url: "/users/checkSession",
+        method: "POST",
+        body,
+      }),
+    }),
     getProfessors: builder.query<string[], string>({
       query: (schoolName) => `/schools/getProfessors?schoolName=${schoolName}`,
       providesTags: ["Professors"]
@@ -97,6 +104,7 @@ export const {
   useGetReviewsQuery,
   useGetFileteredReviewsQuery,
   useLoginMutation,
+  useCheckSessionMutation,
   useGetProfessorsQuery,
   useAddProfessorMutation,
   useAddReviewMutation,

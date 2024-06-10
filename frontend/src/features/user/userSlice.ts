@@ -37,6 +37,19 @@ export const userSlice = createSlice({
 
         return { username, sessionToken };
       }
+    )
+    .addMatcher(
+      apiSlice.endpoints.checkSession.matchFulfilled,
+      (_, action) => {
+        const validSessionToken = action.payload;
+        if (!validSessionToken) {
+          console.log("Invalid session token");
+          localStorage.removeItem("username");
+          localStorage.removeItem("sessionToken");
+
+          return { username: "", sessionToken: null };
+        }
+      }
     );
   },
 });
